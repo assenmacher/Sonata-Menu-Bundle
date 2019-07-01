@@ -24,6 +24,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->booleanNode('knp_menu_integration')->defaultFalse()->end()
                 ->arrayNode('entities')
                     ->addDefaultsIfNotSet()
                     ->children()

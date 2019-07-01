@@ -30,6 +30,7 @@ class ProdigiousSonataMenuExtension extends Extension
 
         $this->registerEntities($container, $config);
         $this->registerAdmins($container, $config);
+        $this->knpMenuIntegration($loader, $config);
     }
 
     /**
@@ -79,5 +80,17 @@ class ProdigiousSonataMenuExtension extends Extension
         }
 
         return $this;
+    }
+
+    /**
+     * @param Loader\YamlFileLoader $loader
+     * @param array                 $config
+     * @throws \Exception
+     */
+    protected function knpMenuIntegration(Loader\YamlFileLoader $loader, array $config)
+    {
+        if ($config['knp_menu_integration']) {
+            $loader->load('knp.yaml');
+        }
     }
 }
