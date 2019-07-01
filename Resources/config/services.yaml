@@ -6,8 +6,6 @@ parameters:
     prodigious_sonata_menu.admin.menu.controller.class: Prodigious\Sonata\MenuBundle\Controller\MenuController
     prodigious_sonata_menu.admin.menu_item.controller.class: Prodigious\Sonata\MenuBundle\Controller\MenuItemController
 
-
-
 services:
 
     prodigious_sonata_menu.factory:
