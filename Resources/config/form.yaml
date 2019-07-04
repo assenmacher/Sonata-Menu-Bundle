@@ -1,0 +1,7 @@
+services:
+    prodigious_sonata_menu.form.type.menuitem_selector:
+        class: Prodigious\Sonata\MenuBundle\Form\Type\MenuItemSelectorType
+        arguments:
+            - '@prodigious_sonata_menuitem.manager'
+        tags:
+            - { name: 'form.type', alias: 'prodigious_menuitem_selector' }

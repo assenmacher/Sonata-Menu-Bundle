@@ -2,16 +2,17 @@
 
 namespace Prodigious\Sonata\MenuBundle\Manager;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
+use Prodigious\Sonata\MenuBundle\Manager\MenuItemManager;
 use Prodigious\Sonata\MenuBundle\Model\MenuInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
-use Prodigious\Sonata\MenuBundle\Repository\MenuRepository;
-use Prodigious\Sonata\MenuBundle\Repository\MenuitemRepository;
+use Sonata\Doctrine\Entity\BaseEntityManager;
 
 /**
  * Menu manager
  */
-class MenuManager
+class MenuManager extends BaseEntityManager
 {
     const STATUS_ENABLED = true;
     const STATUS_DISABLED = false;
@@ -22,31 +23,30 @@ class MenuManager
     const ITEM_ALL = null;
 
     /**
-     *
-     * @var EntityManager
+     * @var MenuItemManager
      */
-    protected $em;
-
-    /**
-     * @var MenuRepository
-     */
-    protected $menuRepository;
-
-    /**
-     * @var MenuItemRepository
-     */
-    protected $menuItemRepository;
+    protected $menuItemManager;
 
     /**
      * Constructor
      *
      * @param EntityManager $em
      */
-    public function __construct(EntityManager $em)
+    public function __construct($class, ManagerRegistry $registry, MenuItemManager $menuItemManager)
     {
-        $this->em = $em;
-        $this->menuRepository = $em->getRepository(MenuInterface::class);
-        $this->menuItemRepository = $em->getRepository(MenuItemInterface::class);
+        parent::__construct($class, $registry);
+
+        $this->menuItemManager = $menuItemManager;
+    }
+
+    /**
+     * get menu item manager
+     *
+     * @return MenuItemManager
+     */
+    public function getMenuItemManager() :MenuItemManager
+    {
+        return $this->menuItemManager;
     }
 
     /**
@@ -57,9 +57,7 @@ class MenuManager
      */
     public function load($id)
     {
-        $menu = $this->menuRepository->find($id);
-
-        return $menu;
+        return $this->find($id);;
     }
 
     /**
@@ -70,9 +68,7 @@ class MenuManager
      */
     public function loadByAlias($alias)
     {
-        $menu = $this->menuRepository->findOneByAlias($alias);
-
-        return $menu;
+        return $this->findOneByAlias($alias);;
     }
 
     /**
@@ -82,25 +78,7 @@ class MenuManager
      */
     public function remove($menu)
     {
-        $menu = $this->menuRepository->remove($menu);
-    }
-
-    /**
-     * Save a menu
-     *
-     * @param Menu $menu
-     */
-    public function save(MenuInterface $menu)
-    {
-        $this->menuRepository->save($menu);
-    }
-
-    /**
-     * @return Menu[]
-     */
-    public function findAll()
-    {
-        return $this->menuRepository->findAll();
+        $this->delete($menu);
     }
 
     /**
@@ -143,7 +121,7 @@ class MenuManager
      */
     public function getMenuItems(MenuInterface $menu, $root = self::ALL_ELEMENTS, $status = self::STATUS_ALL)
     {
-        $menuItems = $menu->getMenuItems()->toArray();
+        $menuItems = $menu->getMenuItems();
 
         return array_filter($menuItems, function(MenuItemInterface $menuItem) use ($root, $status) {
             // Check root parameter
@@ -184,7 +162,7 @@ class MenuManager
 
             foreach ($items as $pos => $item) {
                 /** @var MenuItem $menuItem */
-                $menuItem = $this->menuItemRepository->findOneBy(array('id' => $item->id, 'menu' => $menu));
+                $menuItem = $this->getMenuItemManager()->findOneBy(array('id' => $item->id, 'menu' => $menu));
 
                 if($menuItem) {
                     $menuItem
@@ -192,7 +170,7 @@ class MenuManager
                         ->setParent($parent)
                     ;
 
-                    $this->em->persist($menuItem);
+                    $this->getMenuItemManager()->save($menuItem, false);
                 }
 
                 if(isset($item->children) && !empty($item->children)) {
@@ -200,7 +178,7 @@ class MenuManager
                 }
             }
 
-            $this->em->flush();
+            $this->getMenuItemManager()->getObjectManager()->flush();
 
             $update = true;
         }

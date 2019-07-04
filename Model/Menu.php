@@ -3,6 +3,7 @@
 namespace Prodigious\Sonata\MenuBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
 
@@ -28,6 +29,29 @@ abstract class Menu implements MenuInterface
      * @ORM\Column(name="alias", type="string", length=255)
      */
     protected $alias;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="enabled", type="boolean", nullable=true, options={"default":true})
+     */
+    protected $enabled;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="locale_enabled", type="boolean", nullable=true, options={"default":true})
+     * @Gedmo\Translatable
+     */
+    protected $localeEnabled;
+
+    /**
+     * @var \Prodigious\Sonata\MenuBundle\Model\SiteInterface
+
+     * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\SiteInterface")
+     * @ORM\JoinColumn(name="site", referencedColumnName="id", onDelete="SET NULL", nullable=true)
+     */
+    protected $site;
 
     /**
      * @ORM\OneToMany(targetEntity="\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface", mappedBy="menu", cascade={"persist"})
@@ -91,6 +115,87 @@ abstract class Menu implements MenuInterface
     }
 
     /**
+     * Get site
+     *
+     * @return null|\Prodigious\Sonata\MenuBundle\Model\SiteInterface
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * Set enabled
+     *
+     * @param boolean $enabled
+     * @return MenuItem
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+
+        if(!$enabled && $this->hasChild()) {
+            foreach ($this->children as $child) {
+                if($child->enabled) {
+                    $child->setEnabled(false);
+                    $child->setParent(null);
+                }
+            }
+            $this->children = new ArrayCollection();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get locale enabled
+     *
+     * @return boolean
+     */
+    public function getLocaleEnabled()
+    {
+        return $this->localeEnabled;
+    }
+
+
+    /**
+     * Set locale enabled
+     *
+     * @param boolean $enabled
+     * @return Menu
+     */
+    public function setLocaleEnabled($localeEnabled)
+    {
+        $this->localeEnabled = $localeEnabled;
+
+        return $this;
+    }
+
+    /**
+     * Get enabled
+     *
+     * @return boolean
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Set site
+     *
+     * @param null|\Prodigious\Sonata\MenuBundle\Model\SiteInterface $site
+     *
+     * @return Menu
+     */
+    public function setSite($site)
+    {
+        $this->site = $site;
+
+        return $this;
+    }
+
+    /**
      * Add menuItem
      *
      * @param \Prodigious\Sonata\MenuBundle\Model\MenuItemInterface $menuItem
@@ -99,7 +204,7 @@ abstract class Menu implements MenuInterface
      */
     public function addMenuItem(\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface $menuItem)
     {
-        $this->menuItems[] = $menuItem;
+        $this->menuItems->add($menuItem);
 
         $menuItem->setMenu($this);
 
@@ -137,7 +242,7 @@ abstract class Menu implements MenuInterface
      */
     public function getMenuItems()
     {   
-        return $this->menuItems;
+        return $this->menuItems->toArray();
     }
 
     public function __toString()

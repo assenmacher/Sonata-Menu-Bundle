@@ -3,14 +3,14 @@
 namespace Prodigious\Sonata\MenuBundle\Controller;
 
 use Prodigious\Sonata\MenuBundle\Manager\MenuManager;
-use Sonata\AdminBundle\Controller\CRUDController as Controller;
+use Sonata\AdminBundle\Controller\CRUDController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class MenuController extends Controller
+class MenuAdminController extends CRUDController
 {
 	/**
 	 * Manager menu items

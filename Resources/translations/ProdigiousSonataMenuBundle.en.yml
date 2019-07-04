@@ -15,6 +15,8 @@ config.label_custom_url: Custom URL
 config.label_class_attribute: Class
 config.label_target: New tab
 config.label_enabled: Enabled
+config.label_locale_enabled: Locale Enabled
+config.label_site: Site
 config.label_page: Page
 config.label_parent: Parent
 config.label_children: Submenu
@@ -28,3 +30,6 @@ config.label_saved: Saved
 config.label_error: There is an error
 config.label_id: ID
 config.label_alias: Alias
+config.label_title: Title
+config.label_menu_list: Menu list
+config.label_page_parameter: Page parameter

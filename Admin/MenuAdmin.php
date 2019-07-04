@@ -6,6 +6,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Prodigious\Sonata\MenuBundle\Model\MenuInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -37,8 +38,43 @@ class MenuAdmin extends AbstractAdmin
                         'translation_domain' => 'ProdigiousSonataMenuBundle'
                     ]
                 )
+                ->add('enabled', null,
+                    [
+                        'label' => 'config.label_enabled',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('localeEnabled', null,
+                    [
+                        'label' => 'config.label_locale_enabled',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
             ->end()
         ->end();
+
+        if($this->getConfigurationPool()->getContainer()->hasParameter('sonata.page.page.class'))
+        {
+            $formMapper
+                ->with('config.label_menu', ['translation_domain' => 'ProdigiousSonataMenuBundle'])
+                    ->add('site', ModelType::class,
+                        [
+                            'label' => 'config.label_site',
+                            'required' => true,
+                            'btn_add' => false,
+                        ],
+                        [
+                            'translation_domain' => 'ProdigiousSonataMenuBundle'
+                        ]
+                    )
+                ->end();
+        }
     }
 
     /**
@@ -50,6 +86,8 @@ class MenuAdmin extends AbstractAdmin
             ->add('id', null, ['label' => 'config.label_id', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
             ->addIdentifier('alias', null, ['label' => 'config.label_alias', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
             ->addIdentifier('name', null, ['label' => 'config.label_name', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
+            ->add('enabled', null, ['editable' => true])
+            ->add('localeEnabled', null, ['editable' => true])
         ;
 
         $listMapper->add('_action', 'actions', [

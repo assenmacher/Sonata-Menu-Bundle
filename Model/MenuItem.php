@@ -3,6 +3,7 @@
 namespace Prodigious\Sonata\MenuBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Prodigious\Sonata\MenuBundle\Model\MenuInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
@@ -22,11 +23,19 @@ abstract class MenuItem implements MenuItemInterface
      * @ORM\Column(name="name", type="string", length=255)
      */
     protected $name;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255)
+     * @Gedmo\Translatable
+     */
+    protected $title;
 
     /**
      * @var string
      *
      * @ORM\Column(name="url", type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
      */
     protected $url;
 
@@ -59,13 +68,31 @@ abstract class MenuItem implements MenuItemInterface
     protected $enabled;
 
     /**
-     * @var \stdClass
+     * @var bool
      *
+     * @ORM\Column(name="locale_enabled", type="boolean", nullable=true, options={"default":true})
+     * @Gedmo\Translatable
+     */
+    protected $localeEnabled;
+
+    /**
+     * @var \Prodigious\Sonata\MenuBundle\Model\PageInterface
+
+     * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\PageInterface")
+     * @ORM\JoinColumn(name="page", referencedColumnName="id", onDelete="SET NULL", nullable=true)
      */
     protected $page;
 
     /**
-     * @var \Prodigious\Sonata\PageBundle\Model\MenuItemInterface
+     * @var string
+     *
+     * @ORM\Column(name="page_parameter", type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
+     */
+    protected $pageParameter;
+
+    /**
+     * @var \Prodigious\Sonata\MenuBundle\Model\MenuItemInterface
      *
      * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface", inversedBy="children", cascade={"remove", "persist"})
      * @ORM\JoinColumn(name="parent", referencedColumnName="id", onDelete="SET NULL", nullable=true)
@@ -85,6 +112,11 @@ abstract class MenuItem implements MenuItemInterface
      * @ORM\JoinColumn(name="menu", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     protected $menu;
+
+    /**
+     * @var int
+     */
+    protected $level = 0;
 
     /**
      * Class constructor
@@ -118,6 +150,29 @@ abstract class MenuItem implements MenuItemInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $name
+     * @return MenuItem
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 
     /**
@@ -222,15 +277,29 @@ abstract class MenuItem implements MenuItemInterface
     {
         $this->enabled = $enabled;
 
-        if(!$enabled && $this->hasChild()) {
-            foreach ($this->children as $child) {
-                if($child->enabled) {
-                    $child->setEnabled(false);
-                    $child->setParent(null);
-                }
-            }
-            $this->children = new ArrayCollection();
-        }
+        return $this;
+    }
+
+    /**
+     * Get locale enabled
+     *
+     * @return boolean 
+     */
+    public function getLocaleEnabled()
+    {
+        return $this->localeEnabled;
+    }
+
+
+    /**
+     * Set locale enabled
+     *
+     * @param boolean $enabled
+     * @return MenuItem
+     */
+    public function setLocaleEnabled($localeEnabled)
+    {
+        $this->localeEnabled = $localeEnabled;
 
         return $this;
     }
@@ -238,7 +307,7 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get enabled
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getEnabled()
     {
@@ -248,6 +317,7 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get page
      *
+     * @return null|\Prodigious\Sonata\MenuBundle\Model\PageInterface
      */
     public function getPage()
     {
@@ -257,7 +327,7 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set page
      *
-     * @param $page
+     * @param null|\Prodigious\Sonata\MenuBundle\Model\PageInterface $page
      *
      * @return MenuItem
      */
@@ -266,6 +336,29 @@ abstract class MenuItem implements MenuItemInterface
         $this->page = $page;
 
         return $this;
+    }
+
+    /**
+     * Set page parameter
+     *
+     * @param string $pageParameter
+     * @return MenuItem
+     */
+    public function setPageParameter($pageParameter)
+    {
+        $this->pageParameter = $pageParameter;
+
+        return $this;
+    }
+
+    /**
+     * Get page parameter
+     *
+     * @return string
+     */
+    public function getPageParameter()
+    {
+        return $this->pageParameter;
     }
 
     /**
@@ -304,7 +397,7 @@ abstract class MenuItem implements MenuItemInterface
      */
     public function addChild(\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface $child)
     {
-        $this->children[] = $child;
+        $this->children->add($child);
 
         return $this;
     }
@@ -340,7 +433,7 @@ abstract class MenuItem implements MenuItemInterface
      */
     public function getChildren()
     {
-        return $this->children;
+        return $this->children->toArray();
     }
 
     /**
@@ -394,6 +487,40 @@ abstract class MenuItem implements MenuItemInterface
         }
 
         return $children;
+    }
+
+    /**
+     * get level
+     *
+     * @return int
+     */
+    public function getLevel() :int
+    {
+        return $this->level;
+    }
+
+    /**
+     * set level
+     *
+     * @param int $level
+
+     * @return Page
+     */
+    public function setLevel(int $level) :MenuItem
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * Get level indented name.
+     *
+     * @return string levelIndentedName
+     */
+    public function getLevelIndentedName($indentedWith = '--') :string
+    {
+        return str_pad('', (strlen($indentedWith) * $this->getLevel()), $indentedWith) . ' ' . $this->getName();
     }
 
     public function __toString()

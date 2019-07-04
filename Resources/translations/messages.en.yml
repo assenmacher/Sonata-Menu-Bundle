@@ -9,9 +9,12 @@ config.label_url: URL
 config.label_class_attribute: Class
 config.label_target: New tab
 config.label_enabled: Enabled
+config.label_locale_enabled: Locale Enabled
+config.label_site: Site
 config.label_page: Page
 config.label_parent: Parent
 config.label_children: Submenu
 config.label_menu_link: Link
 config.label_add_menu_item: Add item
 config.label_select: Select
+config.label_title: Title
