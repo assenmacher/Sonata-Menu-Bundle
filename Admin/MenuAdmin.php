@@ -9,6 +9,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Prodigious\Sonata\MenuBundle\Model\MenuInterface;
+use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class MenuAdmin extends AbstractAdmin
@@ -68,6 +69,7 @@ class MenuAdmin extends AbstractAdmin
                             'label' => 'config.label_site',
                             'required' => true,
                             'btn_add' => false,
+                            'help' => 'If you change the site, all existing connections between menuitems and pages will be lost!'
                         ],
                         [
                             'translation_domain' => 'ProdigiousSonataMenuBundle'
@@ -83,11 +85,12 @@ class MenuAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('id', null, ['label' => 'config.label_id', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
+            ->addIdentifier('id', null, ['label' => 'config.label_id', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
             ->addIdentifier('alias', null, ['label' => 'config.label_alias', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
             ->addIdentifier('name', null, ['label' => 'config.label_name', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
-            ->add('enabled', null, ['editable' => true])
-            ->add('localeEnabled', null, ['editable' => true])
+            ->add('site.name', null, ['label' => 'config.label_site', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
+            ->add('enabled', null, ['label' => 'config.label_enabled', 'translation_domain' => 'ProdigiousSonataMenuBundle', 'editable' => true])
+            ->add('localeEnabled', null, ['label' => 'config.label_locale_enabled', 'translation_domain' => 'ProdigiousSonataMenuBundle', 'editable' => true])
         ;
 
         $listMapper->add('_action', 'actions', [
@@ -142,9 +145,7 @@ class MenuAdmin extends AbstractAdmin
     public function prePersist($object)
     {
         parent::prePersist($object);
-        foreach ($object->getMenuItems() as $menuItem) {
-            $menuItem->setMenu($object);
-        }
+        $this->setMenuItems($object);
     }
 
     /**
@@ -153,9 +154,33 @@ class MenuAdmin extends AbstractAdmin
     public function preUpdate($object)
     {
         parent::prePersist($object);
+        $this->setMenuItems($object);
+        $this->removePageFromMenuItemsIfNessery($object);
+    }
+
+    /**
+     * @param MenuInterface $object
+     */
+    protected function setMenuItems(MenuInterface $object)
+    {
         foreach ($object->getMenuItems() as $menuItem) {
             $menuItem->setMenu($object);
         }
+
     }
 
+    /**
+     * @param MenuInterface $object
+     */
+    protected function removePageFromMenuItemsIfNessery(MenuInterface $object)
+    {
+        $em = $this->getModelManager()->getEntityManager($this->getClass());
+        $originalData = $em->getUnitOfWork()->getOriginalEntityData($object);
+
+        if(!is_null($originalData['site']) && $originalData['site']->getId() !== $object->getSite()->getId()) {
+            foreach ($object->getMenuItems() as $menuItem) {
+                $menuItem->setPage(null);
+            }
+        }
+    }
 }

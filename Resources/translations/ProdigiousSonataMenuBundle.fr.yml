@@ -12,19 +12,43 @@ config.label_menu_items: Menu Items
 config.label_menu_item: Menu Item
 config.label_url: URL
 config.label_custom_url: Custom URL
-config.label_class_attribute: Class
+config.label_attribute_class: Element Class (<li>-Tag)
+config.label_attribute_style: Element Style (<li>-Tag)
+config.label_attribute_id: Element Id (<li>-Tag)
+config.label_menu_link: Link (<a>-Tag)
+config.label_link_attribute_class: Element Class
+config.label_link_attribute_style: Element Style
+config.label_link_attribute_id: Element Id
+config.label_menu_label: Link (<span>-Tag, used if no URL to use)
+config.label_label_attribute_class: Element Class
+config.label_label_attribute_style: Element Style
+config.label_label_attribute_id: Element Id
 config.label_target: Nouvel onglet
 config.label_enabled: Activé
+config.label_locale_enabled: Langue activé
+config.label_site: Site
 config.label_page: Page
 config.label_parent: Parent
 config.label_children: Sous menu
-config.label_menu_link: Link
 config.label_add_menu_item: Ajouter un item
 config.label_select: Sélectionner
 config.label_manager_order: Manager l'ordre
 config.label_disabled: Désactivé
+config.label_locale_disabled: Langue Désactivé
 config.label_action: Action
 config.label_saved: Bien enregistré
 config.label_error: Il y a une erreur
 config.label_id: ID
 config.label_alias: Alias
+config.label_title: Titre
+config.label_menu_list: Menu liste
+config.label_page_parameter: Page parameter
+config.label_cache_policy: Cache policy
+config.label_safe_labels: Safe labels
+config.label_current_class: Current CSS Class
+config.label_first_class: First CSS Class
+config.label_last_class: Last CSS Class
+config.label_menu_class: Menu CSS Class
+config.label_children_class: Children CSS Class
+config.label_menu_template: Menu Template
+config.label_current_as_link: Current menu item as link

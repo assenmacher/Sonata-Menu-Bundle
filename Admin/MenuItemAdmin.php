@@ -38,6 +38,7 @@ class MenuItemAdmin extends AbstractAdmin
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->add('toggle', $this->getRouterIdParameter().'/toggle');
+        $collection->add('togglelocale', $this->getRouterIdParameter().'/togglelocale');
     }
 
     /**
@@ -55,6 +56,14 @@ class MenuItemAdmin extends AbstractAdmin
             if($menu = $menuManager->load($menuId))
             {
                 $subject->setMenu($menu);
+            }
+        }
+
+        if($parentId = $this->getRequest()->get('parent', 0))
+        {
+            if($parent = $this->getModelManager()->find($this->getClass(), $parentId))
+            {
+                $subject->setParent($parent);
             }
         }
 
@@ -104,9 +113,27 @@ class MenuItemAdmin extends AbstractAdmin
                         'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
-                ->add('classAttribute', TextType::class,
+                ->add('attributeClass', TextType::class,
                     [
-                        'label' => 'config.label_class_attribute',
+                        'label' => 'config.label_attribute_class',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('attributeStyle', TextType::class,
+                    [
+                        'label' => 'config.label_attribute_style',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('attributeId', TextType::class,
+                    [
+                        'label' => 'config.label_attribute_id',
                         'required' => false,
                     ],
                     [
@@ -191,6 +218,64 @@ class MenuItemAdmin extends AbstractAdmin
                         'translation_domain' => 'ProdigiousSonataMenuBundle'
                     ]
                 )
+                ->add('linkAttributeClass', TextType::class,
+                    [
+                        'label' => 'config.label_link_attribute_class',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('linkAttributeStyle', TextType::class,
+                    [
+                        'label' => 'config.label_link_attribute_style',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('linkAttributeId', TextType::class,
+                    [
+                        'label' => 'config.label_link_attribute_id',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+            ->end();
+
+        $formMapper
+            ->with('config.label_menu_label', ['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
+                ->add('labelAttributeClass', TextType::class,
+                    [
+                        'label' => 'config.label_label_attribute_class',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('labelAttributeStyle', TextType::class,
+                    [
+                        'label' => 'config.label_label_attribute_style',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('labelAttributeId', TextType::class,
+                    [
+                        'label' => 'config.label_label_attribute_id',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
             ->end();
     }
 
@@ -214,8 +299,8 @@ class MenuItemAdmin extends AbstractAdmin
                     'choice_label' => 'name',
                 ]
             )
-            ->add('enabled', null, ['editable' => true])
-            ->add('localeEnabled', null, ['editable' => true])
+            ->add('enabled', null, ['label' => 'config.label_enabled', 'translation_domain' => 'ProdigiousSonataMenuBundle', 'editable' => true])
+            ->add('localeEnabled', null, ['label' => 'config.label_locale_enabled', 'translation_domain' => 'ProdigiousSonataMenuBundle', 'editable' => true])
             ->add('_action', 'actions',
                 [
                     'label' => 'config.label_modify',

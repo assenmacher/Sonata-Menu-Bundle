@@ -59,16 +59,14 @@ class MenuAdminController extends CRUDController
             }
         }
 
-        $menuItemsEnabled = $menuManager->getRootItems($object, MenuManager::STATUS_ENABLED);
-        $menuItemsDisabled = $menuManager->getDisabledItems($object);
+        $menuItems = $menuManager->getRootItems($object, MenuManager::STATUS_ALL);
 
         $menus = $menuManager->findAll();
 
     	return $this->renderWithExtraParams('@ProdigiousSonataMenu/Menu/menu_edit_items.html.twig', array(
             'menus' => $menus,
     		'menu' => $object,
-            'menuItemsEnabled' => $menuItemsEnabled,
-            'menuItemsDisabled' => $menuItemsDisabled
+            'menuItems' => $menuItems,
         ));
     }
 }

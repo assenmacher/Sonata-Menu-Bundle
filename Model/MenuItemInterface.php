@@ -10,7 +10,7 @@ interface MenuItemInterface
 
     public function getUrl();
 
-    public function getClassAttribute();
+    public function getLinkAttributeClass();
 
     public function getPosition();
 
@@ -27,8 +27,6 @@ interface MenuItemInterface
 	public function hasChild();
 
 	public function hasParent();
-	
-	public function getActiveChildren();
 
     public function getMenu();
 

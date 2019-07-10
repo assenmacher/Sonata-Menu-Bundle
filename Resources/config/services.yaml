@@ -2,6 +2,8 @@ parameters:
     prodigious_sonata_menu.factory.class: Prodigious\Sonata\MenuBundle\Factory\MenuFactory
     prodigious_sonata_menu.manager.class: Prodigious\Sonata\MenuBundle\Manager\MenuManager
     prodigious_sonata_menuitem.manager.class: Prodigious\Sonata\MenuBundle\Manager\MenuItemManager
+    prodigious_sonata_menu.registry.class: Prodigious\Sonata\MenuBundle\Menu\MenuRegistry
+    prodigious_sonata_menu.provider.class: Prodigious\Sonata\MenuBundle\Menu\MenuProvider
     prodigious_sonata_menu.repo.class: Prodigious\Sonata\MenuBundle\Repository\MenuRepository
     prodigious_sonata_menu_item.repo.class: Prodigious\Sonata\MenuBundle\Repository\MenuItemRepository
     prodigious_sonata_menu.admin.menu.controller.class: Prodigious\Sonata\MenuBundle\Controller\MenuAdminController
@@ -20,6 +22,18 @@ services:
     prodigious_sonata_menuitem.manager:
         class: '%prodigious_sonata_menuitem.manager.class%'
         arguments: ['%sonata_menu.entity.menu_item%', '@doctrine']
+        public: true
+
+    prodigious_sonata_menu.menu_registry:
+        class: '%prodigious_sonata_menu.registry.class%'
+        arguments: ['@prodigious_sonata_menu.manager']
+        public: true
+
+    prodigious_sonata_menu.menu_provider:
+        class: '%prodigious_sonata_menu.provider.class%'
+        arguments: ['@knp_menu.factory', '@prodigious_sonata_menu.adapter.knp']
+        tags:
+            - { name: knp_menu.provider }
         public: true
 
     prodigious_sonata_menu.repo:

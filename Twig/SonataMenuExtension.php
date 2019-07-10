@@ -3,9 +3,10 @@
 namespace Prodigious\Sonata\MenuBundle\Twig;
 
 use Prodigious\Sonata\MenuBundle\Adapter\KnpMenuAdapter;
-use Twig\Extension\ExtensionInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class SonataMenuExtension extends \Twig_Extension
+class SonataMenuExtension extends AbstractExtension
 {
     /**
      * @var KnpMenuAdapter
@@ -29,7 +30,7 @@ class SonataMenuExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sonata_menu', [$this->knpMenuAdapter, 'createMenu'])
+            new TwigFunction('sonata_menu', [$this->knpMenuAdapter, 'createMenu'])
         ];
     }
 }

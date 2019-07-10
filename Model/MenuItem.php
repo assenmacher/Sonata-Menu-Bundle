@@ -7,6 +7,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Prodigious\Sonata\MenuBundle\Model\MenuInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
+use Prodigious\Sonata\MenuBundle\Model\PageInterface;
 
 /**
  * MenuItem
@@ -42,9 +43,65 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="class_attribute", type="string", length=255, nullable=true)
+     * @ORM\Column(name="attribute_class", type="string", length=255, nullable=true)
      */
-    protected $classAttribute;
+    protected $attributeClass;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="attribute_style", type="string", length=255, nullable=true)
+     */
+    protected $attributeStyle;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="attribute_id", type="string", length=255, nullable=true)
+     */
+    protected $attributeId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="link_attribute_class", type="string", length=255, nullable=true)
+     */
+    protected $linkAttributeClass;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="link_attribute_style", type="string", length=255, nullable=true)
+     */
+    protected $linkAttributeStyle;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="link_attribute_id", type="string", length=255, nullable=true)
+     */
+    protected $linkAttributeId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="label_attribute_class", type="string", length=255, nullable=true)
+     */
+    protected $labelAttributeClass;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="label_attribute_style", type="string", length=255, nullable=true)
+     */
+    protected $labelAttributeStyle;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="label_attribute_id", type="string", length=255, nullable=true)
+     */
+    protected $labelAttributeId;
 
     /**
      * @var integer
@@ -76,7 +133,7 @@ abstract class MenuItem implements MenuItemInterface
     protected $localeEnabled;
 
     /**
-     * @var \Prodigious\Sonata\MenuBundle\Model\PageInterface
+     * @var PageInterface
 
      * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\PageInterface")
      * @ORM\JoinColumn(name="page", referencedColumnName="id", onDelete="SET NULL", nullable=true)
@@ -92,24 +149,26 @@ abstract class MenuItem implements MenuItemInterface
     protected $pageParameter;
 
     /**
-     * @var \Prodigious\Sonata\MenuBundle\Model\MenuItemInterface
+     * @var MenuItemInterface
      *
-     * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface", inversedBy="children", cascade={"remove", "persist"})
-     * @ORM\JoinColumn(name="parent", referencedColumnName="id", onDelete="SET NULL", nullable=true)
+     * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface", inversedBy="children")
+     * @ORM\JoinColumn(name="parent", referencedColumnName="id", nullable=true)
      */
     protected $parent;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface", mappedBy="parent", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface", mappedBy="parent", cascade={"remove", "persist"})
      * @ORM\OrderBy({"position" = "ASC"})
      */
     protected $children;
 
     /**
+     * @var MenuInterface
+     *
      * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\MenuInterface", inversedBy="menuItems")
-     * @ORM\JoinColumn(name="menu", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="menu", referencedColumnName="id", nullable=false)
      */
     protected $menu;
 
@@ -199,26 +258,210 @@ abstract class MenuItem implements MenuItemInterface
     }
 
     /**
-     * Set classAttribute
+     * Set attributeClass
      *
-     * @param string $classAttribute
+     * @param string $attributeClass
      * @return MenuItem
      */
-    public function setClassAttribute($classAttribute)
+    public function setAttributeClass($attributeClass)
     {
-        $this->classAttribute = $classAttribute;
+        $this->attributeClass = $attributeClass;
 
         return $this;
     }
 
     /**
-     * Get classAttribute
+     * Get attributeClass
+     *
+     * @return string
+     */
+    public function getAttributeClass()
+    {
+        return $this->attributeClass;
+    }
+
+    /**
+     * Set attributeStyle
+     *
+     * @param string $attributeStyle
+     * @return MenuItem
+     */
+    public function setAttributeStyle($attributeStyle)
+    {
+        $this->attributeStyle = $attributeStyle;
+
+        return $this;
+    }
+
+    /**
+     * Get attributeStyle
+     *
+     * @return string
+     */
+    public function getAttributeStyle()
+    {
+        return $this->attributeStyle;
+    }
+
+    /**
+     * Set attributeId
+     *
+     * @param string $attributeId
+     * @return MenuItem
+     */
+    public function setAttributeId($attributeId)
+    {
+        $this->attributeId = $attributeId;
+
+        return $this;
+    }
+
+    /**
+     * Get attributeId
+     *
+     * @return string
+     */
+    public function getAttributeId()
+    {
+        return $this->attributeId;
+    }
+
+    /**
+     * Set linkAttributeClass
+     *
+     * @param string $linkAttributeClass
+     * @return MenuItem
+     */
+    public function setLinkAttributeClass($linkAttributeClass)
+    {
+        $this->linkAttributeClass = $linkAttributeClass;
+
+        return $this;
+    }
+
+    /**
+     * Get linkAttributeClass
      *
      * @return string 
      */
-    public function getClassAttribute()
+    public function getLinkAttributeClass()
     {
-        return $this->classAttribute;
+        return $this->linkAttributeClass;
+    }
+
+    /**
+     * Set linkAttributeStyle
+     *
+     * @param string $linkAttributeStyle
+     * @return MenuItem
+     */
+    public function setLinkAttributeStyle($linkAttributeStyle)
+    {
+        $this->linkAttributeStyle = $linkAttributeStyle;
+
+        return $this;
+    }
+
+    /**
+     * Get linkAttributeStyle
+     *
+     * @return string
+     */
+    public function getLinkAttributeStyle()
+    {
+        return $this->linkAttributeStyle;
+    }
+
+    /**
+     * Set linkAttributeId
+     *
+     * @param string $linkAttributeId
+     * @return MenuItem
+     */
+    public function setLinkAttributeId($linkAttributeId)
+    {
+        $this->linkAttributeId = $linkAttributeId;
+
+        return $this;
+    }
+
+    /**
+     * Get linkAttributeId
+     *
+     * @return string
+     */
+    public function getLinkAttributeId()
+    {
+        return $this->linkAttributeId;
+    }
+
+    /**
+     * Set labelAttributeClass
+     *
+     * @param string $labelAttributeClass
+     * @return MenuItem
+     */
+    public function setLabelAttributeClass($labelAttributeClass)
+    {
+        $this->labelAttributeClass = $labelAttributeClass;
+
+        return $this;
+    }
+
+    /**
+     * Get labelAttributeClass
+     *
+     * @return string
+     */
+    public function getLabelAttributeClass()
+    {
+        return $this->labelAttributeClass;
+    }
+
+    /**
+     * Set labelAttributeStyle
+     *
+     * @param string $labelAttributeStyle
+     * @return MenuItem
+     */
+    public function setLabelAttributeStyle($labelAttributeStyle)
+    {
+        $this->labelAttributeStyle = $labelAttributeStyle;
+
+        return $this;
+    }
+
+    /**
+     * Get labelAttributeStyle
+     *
+     * @return string
+     */
+    public function getLabelAttributeStyle()
+    {
+        return $this->labelAttributeStyle;
+    }
+
+    /**
+     * Set labelAttributeId
+     *
+     * @param string $labelAttributeId
+     * @return MenuItem
+     */
+    public function setLabelAttributeId($labelAttributeId)
+    {
+        $this->labelAttributeId = $labelAttributeId;
+
+        return $this;
+    }
+
+    /**
+     * Get labelAttributeId
+     *
+     * @return string
+     */
+    public function getLabelAttributeId()
+    {
+        return $this->labelAttributeId;
     }
 
     /**
@@ -281,15 +524,14 @@ abstract class MenuItem implements MenuItemInterface
     }
 
     /**
-     * Get locale enabled
+     * Get enabled
      *
-     * @return boolean 
+     * @return boolean
      */
-    public function getLocaleEnabled()
+    public function getEnabled()
     {
-        return $this->localeEnabled;
+        return $this->enabled;
     }
-
 
     /**
      * Set locale enabled
@@ -305,19 +547,19 @@ abstract class MenuItem implements MenuItemInterface
     }
 
     /**
-     * Get enabled
+     * Get locale enabled
      *
-     * @return boolean
+     * @return boolean 
      */
-    public function getEnabled()
+    public function getLocaleEnabled()
     {
-        return $this->enabled;
+        return $this->localeEnabled;
     }
 
     /**
      * Get page
      *
-     * @return null|\Prodigious\Sonata\MenuBundle\Model\PageInterface
+     * @return null|PageInterface
      */
     public function getPage()
     {
@@ -327,7 +569,7 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set page
      *
-     * @param null|\Prodigious\Sonata\MenuBundle\Model\PageInterface $page
+     * @param null|PageInterface $page
      *
      * @return MenuItem
      */
@@ -364,7 +606,7 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get parent
      *
-     * @return \Prodigious\Sonata\MenuBundle\Model\MenuItemInterface
+     * @return null|MenuItemInterface
      */
     public function getParent()
     {
@@ -374,11 +616,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set parent
      *
-     * @param \Prodigious\Sonata\MenuBundle\Model\MenuItemInterface $parent
+     * @param null|MenuItemInterface $parent
      *
-     * @return MenuItem
+     * @return null|MenuItemInterface
      */
-    public function setParent($parent)
+    public function setParent(?MenuItemInterface $parent)
     {
         $this->parent = $parent;
         
@@ -391,11 +633,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Add child
      *
-     * @param \Prodigious\Sonata\MenuBundle\Model\MenuItemInterface $child
+     * @param MenuItemInterface $child
      *
      * @return $this
      */
-    public function addChild(\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface $child)
+    public function addChild(MenuItemInterface $child)
     {
         $this->children->add($child);
 
@@ -405,9 +647,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Remove child
      *
-     * @param \Prodigious\Sonata\MenuBundle\Model\MenuItemInterface $child
+     * @param MenuItemInterface $child
      */
-    public function removeChild(\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface $child)
+    public function removeChild(MenuItemInterface $child)
     {
         $this->children->removeElement($child);
     }
@@ -429,7 +671,7 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get children
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      */
     public function getChildren()
     {
@@ -439,11 +681,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set menu
      *
-     * @param \Prodigious\Sonata\MenuBundle\Model\MenuInterface $menu
+     * @param MenuInterface $menu
      *
      * @return MenuItem
      */
-    public function setMenu(\Prodigious\Sonata\MenuBundle\Model\MenuInterface $menu)
+    public function setMenu(?MenuInterface $menu)
     {
         $this->menu = $menu;
 
@@ -453,7 +695,7 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get menu
      *
-     * @return \Prodigious\Sonata\MenuBundle\Model\MenuInterface
+     * @return MenuInterface
      */
     public function getMenu()
     {
@@ -474,19 +716,6 @@ abstract class MenuItem implements MenuItemInterface
     public function hasParent()
     {
         return !is_null($this->parent);
-    }
-
-    public function getActiveChildren()
-    {
-        $children = array();
-
-        foreach ($this->children as $child) {
-            if($child->enabled) {
-                array_push($children, $child);
-            }
-        }
-
-        return $children;
     }
 
     /**

@@ -6,7 +6,7 @@ config.label_modify: Edit
 config.label_menu_items: Menu Items
 config.label_menu_item: Menu Item
 config.label_url: URL
-config.label_class_attribute: Class
+config.label_link_attribute_class: Class
 config.label_target: New tab
 config.label_enabled: Enabled
 config.label_locale_enabled: Locale Enabled
@@ -18,3 +18,12 @@ config.label_menu_link: Link
 config.label_add_menu_item: Add item
 config.label_select: Select
 config.label_title: Title
+config.label_cache_policy: Cache policy
+config.label_safe_labels: Safe labels
+config.label_current_class: Current CSS Class
+config.label_first_class: First CSS Class
+config.label_last_class: Last CSS Class
+config.label_menu_class: Menu CSS Class
+config.label_children_class: Children CSS Class
+config.label_menu_template: Menu Template
+config.label_block_template: Block Template

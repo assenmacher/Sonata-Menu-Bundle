@@ -4,6 +4,9 @@ namespace Prodigious\Sonata\MenuBundle\Manager;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\NonUniqueResultException;
+use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
 use Prodigious\Sonata\MenuBundle\Manager\MenuItemManager;
 use Prodigious\Sonata\MenuBundle\Model\MenuInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
@@ -55,20 +58,114 @@ class MenuManager extends BaseEntityManager
      * @param int $id
      * @return Menu
      */
-    public function load($id)
+    public function load($id, $status = self::STATUS_ALL)
     {
-        return $this->find($id);;
+        return $this->find($id);
+    }
+
+    /**
+     * get all aliases grouped by aliase with used site names
+     *
+     * @return array
+     */
+    public function getSiteGroupedAliases()
+    {
+        $aliases = [];
+
+        foreach($this->findAll() as $menus)
+        {
+            if(!array_key_exists($menus->getAlias(), $aliases)) $aliases[$menus->getAlias()] = [];
+
+            $aliases[$menus->getAlias()][] = $menus->getSite()->getName();
+
+        }
+
+        foreach($aliases as $key=>$aliase)
+        {
+            $aliases[$key] = $key.' ('.implode(', ', $aliases[$key]).')';
+        }
+
+        return $aliases;
     }
 
     /**
      * Load menu by alias
      *
      * @param string $alias
-     * @return Menu
+     * @param string $status
+     * @return null|Menu
      */
-    public function loadByAlias($alias)
+    public function loadByAlias($alias, $status = self::STATUS_ALL)
     {
-        return $this->findOneByAlias($alias);;
+        $criteria = ['alias' => $alias];
+        if(!is_null($status)) {
+            $criteria['enabled'] = $status;
+            $criteria['localeEnabled'] = $status;
+        }
+
+        $query = $this->getSearchOrderTranslationQuery($criteria);
+
+        try {
+            return $query->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Load menu by alias
+     *
+     * @param string $alias
+     * @param int $siteId
+     * @param string $status
+     * @return null|Menu
+     */
+    public function loadByAliasAndSiteId($alias, $siteId, $status = self::STATUS_ALL)
+    {
+        $criteria = ['alias' => $alias, 'site_id' => $siteId];
+        if(!is_null($status)) {
+            $criteria['enabled'] = $status;
+            $criteria['localeEnabled'] = $status;
+        }
+
+        $query = $this->getSearchOrderTranslationQuery($criteria);
+
+        try {
+            return $query->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Load menu by alias
+     *
+     * @param array $criteria
+     * @return Query $query
+     */
+    public function getSearchOrderTranslationQuery($criteria = [], array $orderBy = null)
+    {
+        $queryBuilder = $this->getRepository()
+            ->createQueryBuilder('m')
+            ->select('m');
+
+        foreach ($criteria as $field=>$value) {
+            switch ($field) {
+                case 'site_id':
+                    $queryBuilder->andWhere('IDENTITY(m.site) = :'.$field);
+                    break;
+                default:
+                    $queryBuilder->andWhere('m.'.$field.' = :'.$field);
+
+            }
+        }
+        $queryBuilder->setParameters($criteria);
+
+        $query = $queryBuilder->getQuery();
+
+        $query->setHint( Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class );
+
+        return $query;
     }
 
     /**
@@ -93,33 +190,11 @@ class MenuManager extends BaseEntityManager
     }
 
     /**
-     * Get enabled menu items
-     *
-     * @param Menu $menu
-     * @return MenuItems[]
-     */
-    public function getEnabledItems(MenuInterface $menu)
-    {
-        return $this->getMenuItems($menu, static::ITEM_ALL, static::STATUS_ENABLED);
-    }
-
-    /**
-     * Get disabled menu items
-     *
-     * @param Menu $menu
-     * @return MenuItems[]
-     */
-    public function getDisabledItems(MenuInterface $menu)
-    {
-        return $this->getMenuItems($menu, static::ITEM_ALL, static::STATUS_DISABLED);
-    }
-
-    /**
      * Get menu items
      *
      * @return MenuItem[]
      */
-    public function getMenuItems(MenuInterface $menu, $root = self::ALL_ELEMENTS, $status = self::STATUS_ALL)
+    public function getMenuItems(MenuInterface $menu, $root = self::ITEM_ALL, $status = self::STATUS_ALL, $frontendCall = false)
     {
         $menuItems = $menu->getMenuItems();
 
@@ -132,9 +207,7 @@ class MenuManager extends BaseEntityManager
             }
 
             // Check status parameter
-            if ($status === static::STATUS_ENABLED && !$menuItem->getEnabled()
-             || $status === static::STATUS_DISABLED && $menuItem->getEnabled()
-            ) {
+            if ($status === static::STATUS_ENABLED && (!$menuItem->getEnabled() || !$menuItem->getLocaleEnabled())) {
                 return;
             }
 

@@ -28,6 +28,7 @@ class ProdigiousSonataMenuExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
         $loader->load('form.yaml');
+        $loader->load('block.yaml');
 
         $this->registerEntities($container, $config);
         $this->registerAdmins($container, $config);

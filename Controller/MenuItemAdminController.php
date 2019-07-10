@@ -30,13 +30,28 @@ class MenuItemAdminController extends CRUDController
         $m->persist($object);
         $m->flush();
 
-        return new RedirectResponse($this->get('sonata.admin.route.default_generator')
-            ->generateUrl(
-                $this->get('prodigious_sonata_menu.admin.menu'),
-                'items',
-                ['id' => $object->getMenu()->getId()]
-            )
-        );
+        return $this->getRedirectToItems($object->getMenu());
+    }
+    /**
+     * @param integer $id
+     */
+    public function togglelocaleAction($id)
+    {
+
+        /** @var MenuItemInterface $object */
+        $object = $this->admin->getSubject();
+
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id: %s', $id));
+        }
+
+        $object->setLocaleEnabled(!$object->getLocaleEnabled());
+
+        $m = $this->get('doctrine.orm.entity_manager');
+        $m->persist($object);
+        $m->flush();
+
+        return $this->getRedirectToItems($object->getMenu());
     }
 
     public function listAction()
@@ -53,9 +68,12 @@ class MenuItemAdminController extends CRUDController
             return parent::listAction();
         }
 
-        $url = $this->admin->getParent()->generateObjectUrl('items', $menu, array('id' => $menu->getId()));
+        return $this->getRedirectToItems($menu);
+    }
 
-        return new RedirectResponse($url);
+    protected function getRedirectToItems($menu)
+    {
+        return $this->redirect($this->admin->getParent()->generateObjectUrl('items', $menu, array('id' => $menu->getId())));
     }
 
     /**
@@ -73,7 +91,7 @@ class MenuItemAdminController extends CRUDController
                 $menu = $object->getMenu();
 
                 if($menu && $this->admin->isChild()) {
-                    $url = $this->admin->getParent()->generateObjectUrl('items', $menu, array('id' => $menu->getId()));
+                    return $this->getRedirectToItems($menu);
                 }
             }
 

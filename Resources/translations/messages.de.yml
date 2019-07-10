@@ -1,23 +1,23 @@
-# messages.fr.yml
-config.label_dashboard: Tableau de bord
-config.label_menu: Menu
-config.label_name: Nom
-config.label_modify: Modifier
-config.label_menu_items: Menu Items
-config.label_menu_item: Menu Item
+# messages.en.yml
+config.label_dashboard: Dashboard
+config.label_menu: Menü
+config.label_name: Name
+config.label_modify: Bearbeiten
+config.label_menu_items: Menü Elemente
+config.label_menu_item: Menü Element
 config.label_url: URL
 config.label_link_attribute_class: Class
-config.label_target: Nouvel onglet
-config.label_enabled: Activé
-config.label_locale_enabled: Langue activé
+config.label_target: New tab
+config.label_enabled: Aktiviert
+config.label_locale_enabled: Sprache aktiviert
 config.label_site: Site
 config.label_page: Page
 config.label_parent: Parent
-config.label_children: Sous menu
+config.label_children: Submenu
 config.label_menu_link: Link
-config.label_add_menu_item: Ajouter un item
-config.label_select: Sélectionner
-config.label_title: Titre
+config.label_add_menu_item: Add item
+config.label_select: Select
+config.label_title: Title
 config.label_cache_policy: Cache policy
 config.label_safe_labels: Safe labels
 config.label_current_class: Current CSS Class

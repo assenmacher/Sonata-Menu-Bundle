@@ -62,38 +62,32 @@
 <div class="alert alert-danger" role="alert">{{ flashMessage }}</div>
 {% endfor %}
 
-<form method="POST" action="{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}">
-	<div class="row">
-		<div class="col-md-8">
-			<div class="box box-primary">
-				<div class="panel panel-default">
-					<div class="panel-heading">{{ menu.name }}</div>
-					<div class="panel-body">
-						<div id="nestable" class="menu-tree dd">
-							{% include '@ProdigiousSonataMenu/Menu/menu_item.html.twig' with {'items': menuItemsEnabled, 'type': 'tree', 'admin': admin} %}
+<div class="sonata-ba-form">
+	{{ sonata_block_render_event('sonata.admin.edit.form.top', { 'admin': admin, 'locale_switcher_route': 'items', 'locale_switcher_route_parameters': { 'id': menu.id } }) }}
+
+	<form method="POST" action="{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box box-primary">
+					<div class="panel panel-default">
+						<div class="panel-heading">{{ menu.name }}</div>
+						<div class="panel-body">
+							<div id="nestable" class="menu-tree dd">
+								{% include '@ProdigiousSonataMenu/Menu/menu_item.html.twig' with {'items': menuItems, 'type': 'tree', 'admin': admin} %}
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-4">
-			<div class="box box-primary">
-				<div class="panel panel-default">
-					<div class="panel-heading">{% trans from "ProdigiousSonataMenuBundle" %}config.label_disabled{% endtrans %}</div>
-					<div class="panel-body">
-						{% include '@ProdigiousSonataMenu/Menu/menu_item.html.twig' with {'items': menuItemsDisabled, 'type': 'list', 'admin': admin} %}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<input type="hidden" id="menu" name="menu" value="{{ menu.id }}" />
-	<input type="hidden" id="items" name="items" value="" />
+		<input type="hidden" id="menu" name="menu" value="{{ menu.id }}" />
+		<input type="hidden" id="items" name="items" value="" />
 
-	<div class="sonata-ba-form-actions well well-small form-actions">
-		<button type="submit" class="btn btn-success" name="btn_update"><i class="fa fa-save" aria-hidden="true"></i> {% trans from "ProdigiousSonataMenuBundle" %}config.label_update{% endtrans %}</button>
-	</div>
-</form>
+		<div class="sonata-ba-form-actions well well-small form-actions">
+			<button type="submit" class="btn btn-success" name="btn_update"><i class="fa fa-save" aria-hidden="true"></i> {% trans from "ProdigiousSonataMenuBundle" %}config.label_update{% endtrans %}</button>
+		</div>
+	</form>
+</div>
 {% endblock %}
 
 {% block javascripts %}
