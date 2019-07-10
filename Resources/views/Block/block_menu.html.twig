@@ -1,0 +1,7 @@
+{% extends sonata_block.templates.block_base %}
+
+{% block block %}
+    {% if settings.title is not empty %}<div class="{{ settings.title_class }}">{{ settings.title }}</div>{% endif %}
+    {% set menuItem = knp_menu_get(menu, menu_path, menu_options) %}
+    {{ knp_menu_render(menuItem, menu_options) }}
+{% endblock %}

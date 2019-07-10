@@ -10,6 +10,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
+use Prodigious\Sonata\MenuBundle\Form\Type\MenuItemSelectorType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -37,6 +38,7 @@ class MenuItemAdmin extends AbstractAdmin
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->add('toggle', $this->getRouterIdParameter().'/toggle');
+        $collection->add('togglelocale', $this->getRouterIdParameter().'/togglelocale');
     }
 
     /**
@@ -47,20 +49,21 @@ class MenuItemAdmin extends AbstractAdmin
 
         $subject = $this->getSubject();
 
-        $menu = $subject->getMenu();
+        if(empty($subject->getMenu()) && $menuId = $this->getRequest()->get('menu', 0))
+        {
+            $menuManager = $this->getConfigurationPool()->getContainer()->get('prodigious_sonata_menu.manager');
 
-        if(!$menu) {
+            if($menu = $menuManager->load($menuId))
+            {
+                $subject->setMenu($menu);
+            }
+        }
 
-            $request = $this->getRequest();
-
-            $id = $request->get('menu', '');
-
-
-            if(!empty(intval($id))) {
-
-                $menuManager = $this->getConfigurationPool()->getContainer()->get('prodigious_sonata_menu.manager');
-
-                $menu = $menuManager->load($id);
+        if($parentId = $this->getRequest()->get('parent', 0))
+        {
+            if($parent = $this->getModelManager()->find($this->getClass(), $parentId))
+            {
+                $subject->setParent($parent);
             }
         }
 
@@ -68,30 +71,73 @@ class MenuItemAdmin extends AbstractAdmin
             ->with('config.label_menu_item',['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
                 ->add('name', TextType::class,
                     [
-                        'label' => 'config.label_name'
+                        'label' => 'config.label_name',
                     ],
                     [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle'
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
-                ->add('parent', ModelType::class,
+                ->add('title', TextType::class,
                     [
+                        'label' => 'config.label_title',
+                        'attr' => ['style' => 'border:1px solid #ec6d36;'],
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('menu', ModelType::class,
+                    [
+                        'label' => 'config.label_menu',
+                        'required' => true,
+                        'btn_add' => false,
+                        'disabled' => true,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('parent', MenuItemSelectorType::class,
+                    [
+                        'menu' => $subject->getMenu(),
+                        'model_manager' => $this->getModelManager(),
+                        'class' => $this->getClass(),
                         'label' => 'config.label_parent',
                         'required' => false,
                         'btn_add' => false,
                         'placeholder' => 'config.label_select',
+                        'property' => 'levelIndentedName',
+                        'filter_choice' => ['id' => $subject->getId()]
                     ],
                     [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle'
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
-                ->add('classAttribute', TextType::class,
+                ->add('attributeClass', TextType::class,
                     [
-                        'label' => 'config.label_class_attribute',
+                        'label' => 'config.label_attribute_class',
                         'required' => false,
                     ],
                     [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle'
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('attributeStyle', TextType::class,
+                    [
+                        'label' => 'config.label_attribute_style',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('attributeId', TextType::class,
+                    [
+                        'label' => 'config.label_attribute_id',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
                 ->add('enabled', null,
@@ -100,63 +146,47 @@ class MenuItemAdmin extends AbstractAdmin
                         'required' => false,
                     ],
                     [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle'
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('localeEnabled', null,
+                    [
+                        'label' => 'config.label_locale_enabled',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
             ->end()
+        ;
 
-            ->with('config.label_menu_link', ['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
-                ->add('menu', ModelType::class,
-                    [
-                        'label' => 'config.label_menu',
-                        'required' => false,
-                        'btn_add' => false,
-                        'data' => $menu,
-                        'placeholder' => 'config.label_select',
-                    ],
-                    [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle'
-                    ]
-                )
-            ->end();
+        if($this->getConfigurationPool()->getContainer()->hasParameter('sonata.page.page.class'))
+        {
+            $pageAdmin = $this->getConfigurationPool()->getContainer()->get('sonata.page.admin.page');
 
-        if($this->getConfigurationPool()->getContainer()->hasParameter('sonata.page.page.class')){
-            $pageClass = $this->getConfigurationPool()->getContainer()->getParameter('sonata.page.page.class');
-
-            $em = $this->modelManager->getEntityManager($pageClass);
-            $builder = $em->createQueryBuilder('p');
-
-            $query = $builder->select('p.name, p.url')
-                       ->from($pageClass, 'p')
-                       ->getQuery();
-
-            $pages = $query->getResult();
-
-            $choices = [];
-
-            $subject = $this->getSubject();
-            $url = $subject->getUrl();
-
-            if(version_compare(\Symfony\Component\HttpKernel\Kernel::VERSION, "3.0", "<=")){
-                $choices[0] = 'config.label_select';
-                foreach ($pages as $page) {
-                    $choices[$page['url']] = ucfirst($page['name']);
-                }
-            }else {
-                foreach ($pages as $page) {
-                    $choices['config.label_select'] = null;
-                    $choices[ucfirst($page['name'])] = $page['url'];
-                }
-            }
             $formMapper
                 ->with('config.label_menu_link', ['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
-                    ->add('page', ChoiceType::class,
+                    ->add('page', \Sonata\PageBundle\Form\Type\PageSelectorType::class,
                         [
                             'label' => 'config.label_page',
+                            'site' => $subject->getMenu()->getSite() ?: null,
+                            'model_manager' => $pageAdmin->getModelManager(),
+                            'class' => $pageAdmin->getClass(),
                             'required' => false,
-                            'choices' => $choices,
-                            'data' => $url,
-                            'empty_data' => null,
+                            'btn_add' => false,
+                            'property' => 'levelIndentedName',
+                        ],
+                        [
+                            'translation_domain' => 'ProdigiousSonataMenuBundle'
+                        ]
+                    )
+                    ->add('pageParameter', TextType::class,
+                        [
+                            'label' => 'config.label_page_parameter',
+                            'required' => false,
+                            'attr' => ['style' => 'border:1px solid #ec6d36;'],
+                            'help' => 'Only the parameter string, no leading \'?\'.',
                         ],
                         [
                             'translation_domain' => 'ProdigiousSonataMenuBundle'
@@ -172,6 +202,8 @@ class MenuItemAdmin extends AbstractAdmin
                     [
                         'label' => 'config.label_custom_url',
                         'required' => false,
+                        'attr' => ['style' => 'border:1px solid #ec6d36;'],
+                        'help' => 'Including protocol like http:// and parameters',
                     ],
                     [
                         'translation_domain' => 'ProdigiousSonataMenuBundle'
@@ -186,6 +218,64 @@ class MenuItemAdmin extends AbstractAdmin
                         'translation_domain' => 'ProdigiousSonataMenuBundle'
                     ]
                 )
+                ->add('linkAttributeClass', TextType::class,
+                    [
+                        'label' => 'config.label_link_attribute_class',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('linkAttributeStyle', TextType::class,
+                    [
+                        'label' => 'config.label_link_attribute_style',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('linkAttributeId', TextType::class,
+                    [
+                        'label' => 'config.label_link_attribute_id',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+            ->end();
+
+        $formMapper
+            ->with('config.label_menu_label', ['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
+                ->add('labelAttributeClass', TextType::class,
+                    [
+                        'label' => 'config.label_label_attribute_class',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('labelAttributeStyle', TextType::class,
+                    [
+                        'label' => 'config.label_label_attribute_style',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('labelAttributeId', TextType::class,
+                    [
+                        'label' => 'config.label_label_attribute_id',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
             ->end();
     }
 
@@ -194,32 +284,34 @@ class MenuItemAdmin extends AbstractAdmin
      */
     protected function configureListFields(ListMapper $listMapper)
     {
-        $listMapper->addIdentifier('name', null, ['label' => 'config.label_name', 'translation_domain' => 'ProdigiousSonataMenuBundle']);
-
-        if(version_compare(\Symfony\Component\HttpKernel\Kernel::VERSION, "3.0", "<")){
-            $listMapper->add('menu', null, [], EntityType::class,
+        $listMapper
+            ->addIdentifier('name', null,
                 [
-                    'class'    => $this->menuClass,
-                    'property' => 'name',
+                    'label' => 'config.label_name',
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
                 ]
-            );
-        }else{
-            $listMapper->add('menu', null, [], EntityType::class,
+            )
+            ->add('menu', null,
+                [],
+                EntityType::class,
                 [
                     'class'    => $this->menuClass,
                     'choice_label' => 'name',
                 ]
-            );
-        }
-
-        $listMapper->add('_action', 'actions', [
-            'label' => 'config.label_modify', 
-            'translation_domain' => 'ProdigiousSonataMenuBundle', 
-            'actions' => [
-                'edit' => [], 
-                'delete' => []
-            ]
-        ]);
+            )
+            ->add('enabled', null, ['label' => 'config.label_enabled', 'translation_domain' => 'ProdigiousSonataMenuBundle', 'editable' => true])
+            ->add('localeEnabled', null, ['label' => 'config.label_locale_enabled', 'translation_domain' => 'ProdigiousSonataMenuBundle', 'editable' => true])
+            ->add('_action', 'actions',
+                [
+                    'label' => 'config.label_modify',
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    'actions' => [
+                        'edit' => [],
+                        'delete' => [],
+                    ]
+                ]
+            )
+        ;
     }
 
     /**
@@ -227,7 +319,8 @@ class MenuItemAdmin extends AbstractAdmin
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
-        $datagridMapper->add('name')
+        $datagridMapper
+            ->add('name')
             ->add('menu', null, [], EntityType::class,
                 [
                     'class' => $this->menuClass,
@@ -240,7 +333,6 @@ class MenuItemAdmin extends AbstractAdmin
      */
     public function prePersist($object)
     {
-        $this->rewriteUrl($object);
     }
 
     /**
@@ -248,48 +340,6 @@ class MenuItemAdmin extends AbstractAdmin
      */
     public function preUpdate($object)
     {
-        $this->rewriteUrl($object);
-    }
-
-    public function rewriteUrl($object)
-    {
-        if($this->getConfigurationPool()->getContainer()->hasParameter('sonata.page.page.class')) {
-            $data = $this->getForm()->get('page')->getData();
-            if(!empty($data)){
-                $object->setUrl($data);
-            }
-        }
-        $this->updateUrl($object);
-    }
-
-    /**
-     * Update url
-     *
-     * @param Menuitem $object
-     */
-    public function updateUrl($object)
-    {
-        $url = $object->getUrl();
-
-        if(empty($url)) {
-
-            $parent = $object->getParent();
-
-            $container = $this->getConfigurationPool()->getContainer();
-
-            $slugify = $container->get('sonata.core.slugify.cocur');
-
-            $url = $slugify->slugify(strip_tags($object->getName()));
-
-            if($object->hasParent()) {
-                $parent = $object->getParent();
-                $url = $parent->getUrl().'/'.$url;
-            }else {
-                $url = '/'.$url;
-            }
-
-            $object->setUrl($url);
-        }
     }
 
     /**

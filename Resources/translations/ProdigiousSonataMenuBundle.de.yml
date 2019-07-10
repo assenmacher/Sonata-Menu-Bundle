@@ -1,0 +1,65 @@
+# SonataMenuBundle.en.yml
+config.label_dashboard: Dashboard
+config.label_menu: Menü
+config.label_menus: Menüs
+config.label_name: Name
+config.label_add: Hinzufügen
+config.label_update: Update
+config.label_add_item: Element hinzufügen
+config.label_modify: Bearbeiten
+config.label_delete: Löschen
+config.label_menu_items: Menü Elemente
+config.label_menu_item: Menü Element
+config.label_url: Zu verwendendes Menü
+config.label_custom_url: Custom URL
+config.label_attribute_class: Element Class (<li>-Tag)
+config.label_attribute_style: Element Style (<li>-Tag)
+config.label_attribute_id: Element Id (<li>-Tag)
+config.label_menu_link: Link (<a>-Tag)
+config.label_link_attribute_class: Element Class
+config.label_link_attribute_style: Element Style
+config.label_link_attribute_id: Element Id
+config.label_menu_label: Link (<span>-Tag, used if no URL to use)
+config.label_label_attribute_class: Element Class
+config.label_label_attribute_style: Element Style
+config.label_label_attribute_id: Element Id
+config.label_target: New tab
+config.label_enabled: Aktiviert
+config.label_locale_enabled: In dieser Sprache aktiviert
+config.label_site: Site
+config.label_page: Page
+config.label_parent: Parent
+config.label_children: Submenu
+config.label_add_menu_item: Element Hinzufügen
+config.label_select: Auswählen
+config.label_manager_order: Manage the order
+config.label_disabled: Deaktiviert
+config.label_locale_disabled: In dieser Sprache deaktiviert
+config.label_action: Action
+config.label_saved: Gespeichert
+config.label_error: There is an error
+config.label_id: ID
+config.label_alias: Alias
+config.label_title: Titel
+config.label_menu_list: Menüliste
+config.label_page_parameter: Page parameter
+config.label_cache_policy: Cache policy
+config.label_safe_labels: HTML im Titel erlauben
+config.label_block_template: Block Template
+config.label_current_class: CSS Klasse für das aktive Elemente (<li>-Tag)
+config.label_first_class: CSS Klasse des ersten Elements einer Liste (<li>-Tag)
+config.label_last_class: CSS Klasse des letzten Elements einer Liste (<li>-Tag)
+config.label_menu_class: Menü CSS Klasse (<ul>-Tag)
+config.label_children_class: Elementegruppe CSS Klasse (<ul>-Tag)
+config.label_menu_template: Menü Template
+config.label_current_as_link: Aktueller Menüpunkt mit Link ausgeben
+config.label_ancestor_class: CSS Klasse wenn ein Element ein aktives Element enthält (<li>-Tag)
+config.label_branch_class: CSS Klasse wenn Element weitere Elemente enthält (<li>-Tag)
+config.label_leaf_class: CSS Klasse wenn Element keine weiteren Elemente enthält (<li>-Tag)
+config.label_depth: Bis zu welcher Ebene ausgeben
+config.label_matching_depth: Bis zu welcher Ebene aktive Eltern-Element gesucht werden
+config.label_include_homepage_link: Homepage-Link voranstellen (Bitte Titel angeben)
+config.label_label_homepage_link: Titel für den Homgage-Link
+config.label_title_class: Titel CSS Class
+config.label_list_class: Breadcrumb CSS Klasse (im <ul>/<ol>-Tag)
+config.label_list_item_class: Breadcrumb Elemente CSS Klasse (im <li>-Tag)

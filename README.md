@@ -340,8 +340,8 @@ return  $this->render('menu/menu.html.twig', [
     
             {% set url = menuItem.url %}
             {% set attributes = "menu-item" %}
-            {% if menuItem.classAttribute %}
-            {% set attributes = attributes ~ ' ' ~ menuItem.classAttribute %}
+            {% if menuItem.linkAttributeClass %}
+            {% set attributes = attributes ~ ' ' ~ menuItem.linkAttributeClass %}
             {% endif %}
             {% if menuItem.hasChild() %}
             

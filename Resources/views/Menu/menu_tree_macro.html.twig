@@ -4,18 +4,29 @@
 
 <ol class="items-list dd-list">
 
-    {% for item in items if item.enabled %}
+    {% for item in items %}
     <li class="menu-item dd-item" data-id="{{ item.id }}">
         <div class="item-handle dd-handle">Drag</div>
         <div class="item-content dd-content">
-            <span title="{{ item.name }}">{{ item.name|slice(0, 70) }}{% if item.name|length > 70 %}...{% endif %}</span>
+            {% set title = item.title %}
+            {% if title is empty %}{% set title = item.name %}{% endif %}
+            <span title="{{ item.name }}">{{ title|slice(0, 70) }}{% if title|length > 70 %}...{% endif %}</span>
             <div class="btn-group action-dropdown">
-                <a class="btn btn-xs {% if item.enabled %}btn-warning{% else %}btn-success{% endif %}" href="{{admin.getChild('prodigious_sonata_menu.admin.menu_item').generateUrl('toggle', {'id':item.id})}}">
+                <a class="btn btn-xs {% if item.enabled %}btn-success{% else %}btn-warning{% endif %}" href="{{admin.getChild('prodigious_sonata_menu.admin.menu_item').generateUrl('toggle', {'id':item.id})}}">
                     <strong>
                         {% if item.enabled %}
-                            {{ 'config.label_disabled'|trans({}, 'ProdigiousSonataMenuBundle') }}
+                            {{ 'config.label_enabled'|trans({}, 'ProdigiousSonataMenuBundle') }}
                         {% else %}
-                            {{ 'config.config.label_enabled'|trans({}, 'ProdigiousSonataMenuBundle') }}
+                            {{ 'config.label_disabled'|trans({}, 'ProdigiousSonataMenuBundle') }}
+                        {% endif %}
+                    </strong>
+                </a>
+                <a class="btn btn-xs {% if item.localeEnabled %}btn-success{% else %}btn-warning{% endif %}" href="{{admin.getChild('prodigious_sonata_menu.admin.menu_item').generateUrl('togglelocale', {'id':item.id})}}">
+                    <strong>
+                        {% if item.localeEnabled %}
+                            {{ 'config.label_locale_enabled'|trans({}, 'ProdigiousSonataMenuBundle') }}
+                        {% else %}
+                            {{ 'config.label_locale_disabled'|trans({}, 'ProdigiousSonataMenuBundle') }}
                         {% endif %}
                     </strong>
                 </a>
@@ -23,8 +34,11 @@
                     {% trans from "ProdigiousSonataMenuBundle" %}config.label_action{% endtrans %} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a class="btn-menuitem" href="{{admin.getChild('prodigious_sonata_menu.admin.menu_item').generateUrl('delete', {'id':item.id})}}"><i class="fa fa-times" aria-hidden="true"></i>  <strong>{% trans from "ProdigiousSonataMenuBundle" %}config.label_delete{% endtrans %}</strong></a></li>
                     <li><a class="btn-menuitem" href="{{admin.getChild('prodigious_sonata_menu.admin.menu_item').generateUrl('edit', {'id':item.id})}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>  <strong>{% trans from "ProdigiousSonataMenuBundle" %}config.label_modify{% endtrans %}</strong></a></li>
+                    <li><a class="btn-menuitem" href="{{admin.getChild('prodigious_sonata_menu.admin.menu_item').generateUrl('create', {'parent':item.id})}}"><i class="fa fa-plus-circle" aria-hidden="true"></i>  <strong>{% trans from "ProdigiousSonataMenuBundle" %}config.label_add_item{% endtrans %}</strong></a></li>
+                    <li><a class="btn-menuitem" href="{{admin.getChild('prodigious_sonata_menu.admin.menu_item').generateUrl('delete', {'id':item.id})}}"><i class="fa fa-times" aria-hidden="true"></i>  <strong>{% trans from "ProdigiousSonataMenuBundle" %}config.label_delete{% endtrans %}</strong></a></li>
+
+
                 </ul>
             </div>
         </div>

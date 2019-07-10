@@ -1,0 +1,15 @@
+parameters:
+    prodigious_sonata_menu.block.menu.class: Prodigious\Sonata\MenuBundle\Block\MenuBlockService
+    prodigious_sonata_menu.block.breadcrumb.class: Prodigious\Sonata\MenuBundle\Block\BreadcrumbBlockService
+
+services:
+    prodigious_sonata_menu.block.menu:
+        class: '%prodigious_sonata_menu.block.menu.class%'
+        arguments: ['Sonata Page Menu', '@sonata.templating', '@sonata.page.template_manager', '@prodigious_sonata_menu.menu_provider', '@prodigious_sonata_menu.menu_registry']
+        tags:
+            - { name: sonata.block}
+    prodigious_sonata_menu.block.breadcrumb:
+        class: '%prodigious_sonata_menu.block.breadcrumb.class%'
+        arguments: ['Sonata Page Breadcrumb', '@sonata.templating', '@sonata.page.template_manager', '@prodigious_sonata_menu.menu_registry']
+        tags:
+            - { name: sonata.block}

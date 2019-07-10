@@ -3,14 +3,14 @@
 namespace Prodigious\Sonata\MenuBundle\Controller;
 
 use Prodigious\Sonata\MenuBundle\Manager\MenuManager;
-use Sonata\AdminBundle\Controller\CRUDController as Controller;
+use Sonata\AdminBundle\Controller\CRUDController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class MenuController extends Controller
+class MenuAdminController extends CRUDController
 {
 	/**
 	 * Manager menu items
@@ -59,16 +59,14 @@ class MenuController extends Controller
             }
         }
 
-        $menuItemsEnabled = $menuManager->getRootItems($object, MenuManager::STATUS_ENABLED);
-        $menuItemsDisabled = $menuManager->getDisabledItems($object);
+        $menuItems = $menuManager->getRootItems($object, MenuManager::STATUS_ALL);
 
         $menus = $menuManager->findAll();
 
     	return $this->renderWithExtraParams('@ProdigiousSonataMenu/Menu/menu_edit_items.html.twig', array(
             'menus' => $menus,
     		'menu' => $object,
-            'menuItemsEnabled' => $menuItemsEnabled,
-            'menuItemsDisabled' => $menuItemsDisabled
+            'menuItems' => $menuItems,
         ));
     }
 }

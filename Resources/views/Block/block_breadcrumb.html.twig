@@ -1,0 +1,26 @@
+{% extends sonata_block.templates.block_base %}
+
+{% block block %}
+    {% if settings.title is not empty %}<div class="{{ settings.title_class }}">{{ settings.title }}</div>{% endif %}
+    <ol class="{{ settings.list_class }}">
+    {% for breadcrumb_item in knp_menu_get_breadcrumbs_array(knp_menu_get_current_item(menu)) %}
+        {% set label = breadcrumb_item.label %}
+        {% if loop.first %}
+            {% if settings.include_homepage_link %}
+                {% set label = settings.label_homepage_link %}
+                <li class="{{ settings.list_item_class }}"><a href="/">{{ block('breadcrumbLabel') }}</a></li>
+            {% endif %}
+        {% elseif not loop.last %}
+            <li class="{{ settings.list_item_class }}"><a href="{{ breadcrumb_item.uri }}">{{ block('breadcrumbLabel') }}</a></li>
+        {% else %}
+            {% if settings.current_as_link %}
+                <li class="{{ settings.list_item_class }} active"><a href="{{ breadcrumb_item.uri }}">{{ block('breadcrumbLabel') }}</a></li>
+            {% else %}
+                <li class="{{ settings.list_item_class }} active">{{ block('breadcrumbLabel') }}</li>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    </ol>
+{% endblock %}
+
+{% block breadcrumbLabel %}{% if settings.safe_labels %}{{ label|raw }}{% else %}{{ label }}{% endif %}{% endblock %}
