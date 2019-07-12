@@ -128,15 +128,22 @@ class BreadcrumbBlockService extends AbstractAdminBlockService
             'required' => false,
         ]);
 
-        foreach ($this->getFormSettingsKeys() as $formSettings)
+        foreach ($this->getFormSettingsKeys() as $groupName => $group)
         {
-            list($name, $type, $options) = $formSettings;
+            $form->end();
+            $form->with($groupName, $group['options']);
 
-            if(!array_key_exists('property_path', $options)) $options['property_path'] = sprintf('settings[%s]', $name);
+            foreach ($group['settings'] as $formSettings)
+            {
+                list($name, $type, $options) = $formSettings;
 
-            $fieldDescriptionOptions = ['translation_domain' => 'ProdigiousSonataMenuBundle'];
+                if(!array_key_exists('property_path', $options)) $options['property_path'] = sprintf('settings[%s]', $name);
 
-            $form->add($name, $type, $options, $fieldDescriptionOptions);
+                $fieldDescriptionOptions = ['translation_domain' => 'ProdigiousSonataMenuBundle'];
+
+                $form->add($name, $type, $options, $fieldDescriptionOptions);
+
+            }
         }
     }
 
@@ -151,14 +158,6 @@ class BreadcrumbBlockService extends AbstractAdminBlockService
             $errorElement->with('menu_name')
                 ->addViolation('prodigious.menu.block.menu.not_existing', ['%name%' => $name])
             ->end();
-        }
-
-        if($block->getSetting('include_homepage_link', false) && $block->getLocaleSetting('label_homepage_link', '') == '')
-        {
-            $errorElement
-                ->with('label_homepage_link')
-                    ->addViolation('prodigious.menu.block.hompage_lable.not_existing')
-                ->end();
         }
     }
 
@@ -178,6 +177,7 @@ class BreadcrumbBlockService extends AbstractAdminBlockService
             'current_class' => 'active',
             'list_class' => 'breadcrumb_list',
             'list_item_class' => 'breadcrumb_list_item',
+            'alias_homepage_link' => '',
         ];
     }
 
@@ -202,6 +202,11 @@ class BreadcrumbBlockService extends AbstractAdminBlockService
         {
             $block->setSetting('template', $this->getDefault('template'));
         }
+        if($block->getSetting('include_homepage_link', false))
+        {
+            if($block->getLocaleSetting('label_homepage_link', '') == '') $block->getLocaleSetting('label_homepage_link', 'Homepage');
+            if($block->getSetting('alias_homepage_link', '') == '') $block->setSetting('alias_homepage_link', '/');
+        }
         parent::prePersist($block);
     }
 
@@ -212,6 +217,11 @@ class BreadcrumbBlockService extends AbstractAdminBlockService
         if($block->getSetting('template', '') == '')
         {
             $block->setSetting('template', $this->getDefault('template'));
+        }
+        if($block->getSetting('include_homepage_link', false))
+        {
+            if($block->getLocaleSetting('label_homepage_link', '') == '') $block->setLocaleSetting('label_homepage_link', 'Homepage');
+            if($block->getSetting('alias_homepage_link', '') == '') $block->setSetting('alias_homepage_link', '/');
         }
         parent::preUpdate($block);
     }
@@ -247,49 +257,67 @@ class BreadcrumbBlockService extends AbstractAdminBlockService
         ];
 
         return [
-            ['title_class', TextType::class, [
-                'required' => false,
-                'label' => 'config.label_title_class',
-            ]],
-            ['cache_policy', ChoiceType::class, [
-                'label' => 'config.label_cache_policy',
-                'choices' => ['Public' => 'public', 'Private' => 'private'],
-            ]],
-            ['menu_name', ChoiceType::class, $menuNameOptions],
-            ['safe_labels', CheckboxType::class, [
-                'required' => false,
-                'label' => 'config.label_safe_labels',
-            ]],
-            ['current_as_link', CheckboxType::class, [
-                'required' => false,
-                'label' => 'config.label_current_as_link',
-            ]],
-            ['include_homepage_link', CheckboxType::class, [
-                'required' => false,
-                'label' => 'config.label_include_homepage_link',
-            ]],
-            ['label_homepage_link', TextType::class, [
-                'label' => 'config.label_label_homepage_link',
-                'attr' => ["style" => "border:1px solid #ec6d36;"],
-                'property_path' => 'localeSettings[label_homepage_link]',
-            ]],
-            ['current_class', TextType::class, [
-                'required' => false,
-                'label' => 'config.label_current_class',
-            ]],
-            ['list_class', TextType::class, [
-                'required' => false,
-                'label' => 'config.label_list_class',
-            ]],
-            ['list_item_class', TextType::class, [
-                'required' => false,
-                'label' => 'config.label_list_item_class',
-            ]],
-            ['template', TextType::class, [
-                'required' => false,
-                'label' => 'config.label_block_template',
-                'sonata_help'  => 'If not a Bundel path like the default "'.$this->getDefault('template').'", use only the template name/path relative to "/templates/'.$this->templatePath.'" like "block_breadcrumb.html.twig". A block template is nessery, if you leave the field blank, it will be set to the default bundel template.',
-            ]],
+            'form.field_group_options' => [
+                'options' => [
+                 ],
+                'settings' => [
+                    ['title_class', TextType::class, [
+                        'required' => false,
+                        'label' => 'config.label_title_class',
+                    ]],
+                    ['cache_policy', ChoiceType::class, [
+                        'label' => 'config.label_cache_policy',
+                        'choices' => ['Public' => 'public', 'Private' => 'private'],
+                    ]],
+                    ['menu_name', ChoiceType::class, $menuNameOptions],
+                    ['safe_labels', CheckboxType::class, [
+                        'required' => false,
+                        'label' => 'config.label_safe_labels',
+                    ]],
+                    ['current_as_link', CheckboxType::class, [
+                        'required' => false,
+                        'label' => 'config.label_current_as_link',
+                    ]],
+                    ['current_class', TextType::class, [
+                        'required' => false,
+                        'label' => 'config.label_current_class',
+                    ]],
+                    ['list_class', TextType::class, [
+                        'required' => false,
+                        'label' => 'config.label_list_class',
+                    ]],
+                    ['list_item_class', TextType::class, [
+                        'required' => false,
+                        'label' => 'config.label_list_item_class',
+                    ]],
+                    ['template', TextType::class, [
+                        'required' => false,
+                        'label' => 'config.label_block_template',
+                        'sonata_help'  => 'If not a Bundel path like the default "'.$this->getDefault('template').'", use only the template name/path relative to "/templates/'.$this->templatePath.'" like "block_breadcrumb.html.twig". A block template is nessery, if you leave the field blank, it will be set to the default bundel template.',
+                    ]],
+                ],
+            ], 'config.field_group_options' => [
+                'options' => [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ],
+                'settings' => [
+                    ['include_homepage_link', CheckboxType::class, [
+                        'required' => false,
+                        'label' => 'config.label_include_homepage_link',
+                    ]],
+                    ['label_homepage_link', TextType::class, [
+                        'required' => false,
+                        'label' => 'config.label_label_homepage_link',
+                        'attr' => ["style" => "border:1px solid #ec6d36;"],
+                        'property_path' => 'localeSettings[label_homepage_link]',
+                    ]],
+                    ['alias_homepage_link', TextType::class, [
+                        'required' => false,
+                        'label' => 'config.label_alias_homepage_link',
+                        'sonata_help'  => 'If not set, "/" will be used.',
+                    ]],
+                ],
+            ],
         ];
     }
 }
