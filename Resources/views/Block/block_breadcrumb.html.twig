@@ -8,15 +8,15 @@
         {% if loop.first %}
             {% if settings.include_homepage_link %}
                 {% set label = settings.label_homepage_link %}
-                <li class="{{ settings.list_item_class }}"><a href="/">{{ block('breadcrumbLabel') }}</a></li>
+                <li class="{{ settings.list_item_class }}"><a href="{% if settings.alias_homepage_link starts with '/' %}{{ settings.alias_homepage_link }}{% else %}{{ path(settings.alias_homepage_link) }}{% endif %}">{{ block('breadcrumbLabel') }}</a></li>
             {% endif %}
         {% elseif not loop.last %}
-            <li class="{{ settings.list_item_class }}"><a href="{{ breadcrumb_item.uri }}">{{ block('breadcrumbLabel') }}</a></li>
+            <li class="{{ settings.list_item_class }}">{% if  breadcrumb_item.uri is not empty %}<a href="{{ breadcrumb_item.uri }}">{{ block('breadcrumbLabel') }}</a>{% else %}<span>{{ block('breadcrumbLabel') }}</span>{% endif %}</li>
         {% else %}
             {% if settings.current_as_link %}
                 <li class="{{ settings.list_item_class }} active"><a href="{{ breadcrumb_item.uri }}">{{ block('breadcrumbLabel') }}</a></li>
             {% else %}
-                <li class="{{ settings.list_item_class }} active">{{ block('breadcrumbLabel') }}</li>
+                <li class="{{ settings.list_item_class }} active"><span>{{ block('breadcrumbLabel') }}</span></li>
             {% endif %}
         {% endif %}
     {% endfor %}

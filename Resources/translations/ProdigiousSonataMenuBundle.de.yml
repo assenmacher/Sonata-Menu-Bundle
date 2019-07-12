@@ -60,6 +60,8 @@ config.label_depth: Bis zu welcher Ebene ausgeben
 config.label_matching_depth: Bis zu welcher Ebene aktive Eltern-Element gesucht werden
 config.label_include_homepage_link: Homepage-Link voranstellen (Bitte Titel angeben)
 config.label_label_homepage_link: Titel für den Homgage-Link
+config.label_alias_homepage_link: Homepage-Link Seitenalias
 config.label_title_class: Titel CSS Class
 config.label_list_class: Breadcrumb CSS Klasse (im <ul>/<ol>-Tag)
 config.label_list_item_class: Breadcrumb Elemente CSS Klasse (im <li>-Tag)
+config.field_group_options: Hompage

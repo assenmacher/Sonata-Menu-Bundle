@@ -44,17 +44,24 @@ config.label_title: Title
 config.label_menu_list: Menu list
 config.label_page_parameter: Page parameter
 config.label_cache_policy: Cache policy
-config.label_safe_labels: Sichere Bezeichner
+config.label_safe_labels: Safe labels
 config.label_block_template: Block Template
-config.label_current_class: Aktuelle CSS Klasse
-config.label_first_class: Erste CSS Klasse
-config.label_last_class: Letzte CSS Klasse
-config.label_menu_class: Menü CSS Klasse (in <ul>-Tag)
-config.label_children_class: Children CSS Klasse (in <ul>-Tag)
-config.label_menu_template: Menü Template
+config.label_current_class: Current CSS Klasse
+config.label_first_class: First CSS class
+config.label_last_class: Last CSS class
+config.label_menu_class: Menue CSS class (in <ul>-Tag)
+config.label_children_class: Children CSS class (in <ul>-Tag)
+config.label_menu_template: Menue template
 config.label_current_as_link: Current menu item as link
 config.label_ancestor_class: CSS Klasse if a element in the active tree
 config.label_branch_class: CSS class for branch elements in your html tree
 config.label_leaf_class: CSS class for leaf elements in your html tree
 config.label_depth: Render only this levels deep
 config.label_matching_depth: The depth of the scan to determine whether an item is an ancestor of the current item.
+config.label_include_homepage_link: Show Homepage-Link (Please add a Homepage-Link Titel)
+config.label_label_homepage_link: Homepage-Link Titel
+config.label_alias_homepage_link: Homepage-Link Page-Alias
+config.label_title_class: Titel CSS class
+config.label_list_class: Breadcrumb CSS class (im <ul>/<ol>-Tag)
+config.label_list_item_class: Breadcrumb elements CSS class (im <li>-Tag)
+config.field_group_options: Hompage
