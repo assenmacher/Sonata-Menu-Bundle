@@ -9,6 +9,7 @@ use Prodigious\Sonata\MenuBundle\Manager\MenuManager;
 use Prodigious\Sonata\MenuBundle\Manager\MenuItemManager;
 
 use Sonata\PageBundle\Site\SiteSelectorInterface;
+use Sonata\PageBundle\CmsManager\CmsManagerSelectorInterface;
 use Sonata\PageBundle\Model\SiteInterface;
 
 /**
@@ -48,23 +49,31 @@ class KnpMenuAdapter
     protected $siteSelector;
 
     /**
+     * @var CmsManagerSelectorInterface $cmsManagerSelector
+     */
+    protected $cmsManagerSelector;
+
+    /**
      * KnpMenuAdapter constructor.
      *
      * @param FactoryInterface $factory
      * @param MenuManager $menuManager
      * @param MenuItemManager $menuItemManager
      * @param SiteSelectorInterface $siteSelector
+     * @param CmsManagerSelectorInterface $cmsManagerSelector
      */
     public function __construct(
         FactoryInterface $factory,
         MenuManager $menuManager,
         MenuItemManager $menuItemManager,
-        SiteSelectorInterface $siteSelector
+        SiteSelectorInterface $siteSelector,
+        CmsManagerSelectorInterface $cmsManagerSelector
     ) {
         $this->factory = $factory;
         $this->menuManager = $menuManager;
         $this->menuItemManager = $menuItemManager;
         $this->siteSelector = $siteSelector;
+        $this->cmsManagerSelector = $cmsManagerSelector;
     }
 
     /**
@@ -138,13 +147,12 @@ class KnpMenuAdapter
      */
     protected function recursiveAddItem(ItemInterface $menu, MenuItemInterface $menuItem, array $options = [])
     {
-        $menuItemChilds = $this->menuItemManager->getActiveChildren($menuItem);
-        $menuItemChildCount = count($menuItemChilds);
-
         $pageParameters = [];
 
         if($menuItem->getUrl() == '' && $page = $menuItem->getPage())
         {
+            if(!$this->cmsManagerSelector->isPageViewable($page)) return false;
+
             $pageParameters['route'] = 'page_slug';
             $pageParameters['routeParameters'] = [];
 
@@ -152,7 +160,7 @@ class KnpMenuAdapter
                 parse_str($menuItem->getPageParameter() ,  $pageParameters['routeParameters']);
             }
 
-            $pageParameters['routeParameters']['path'] = $menuItem->getPage()->getUrl();
+            $pageParameters['routeParameters']['path'] = $page->getUrl();
         }
 
         $childOptions = array_merge([
@@ -181,7 +189,9 @@ class KnpMenuAdapter
 
         $childMenu = $menu->addChild(sprintf('%s.%d', $menu->getName(), $menuItem->getId()), $childOptions);
 
-        if ($menuItemChildCount) {
+        $menuItemChilds = $this->menuItemManager->getActiveChildren($menuItem);
+
+        if (count($menuItemChilds)) {
             foreach ($menuItemChilds as $menuItemChild) {
                 $this->recursiveAddItem($childMenu, $menuItemChild, $options);
             }
