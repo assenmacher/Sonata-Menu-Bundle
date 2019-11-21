@@ -151,14 +151,14 @@ class KnpMenuAdapter
 
         if($menuItem->getUrl() == '' && $page = $menuItem->getPage())
         {
-            if(!$this->cmsManagerSelector->isPageViewable($page)) return false;
-
             $pageParameters['route'] = 'page_slug';
             $pageParameters['routeParameters'] = [];
 
             if($menuItem->getPageParameter() != '') {
                 parse_str($menuItem->getPageParameter() ,  $pageParameters['routeParameters']);
             }
+
+            if(!$this->cmsManagerSelector->isPageViewable($page, $pageParameters['routeParameters'])) return false;
 
             $pageParameters['routeParameters']['path'] = $page->getUrl();
         }
