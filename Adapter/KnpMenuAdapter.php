@@ -11,6 +11,7 @@ use Prodigious\Sonata\MenuBundle\Manager\MenuItemManager;
 use Sonata\PageBundle\Site\SiteSelectorInterface;
 use Sonata\PageBundle\CmsManager\CmsManagerSelectorInterface;
 use Sonata\PageBundle\Model\SiteInterface;
+use Sonata\PageBundle\Model\PageInterface;
 
 /**
  * Class KnpMenuAdapter
@@ -149,9 +150,12 @@ class KnpMenuAdapter
     {
         $pageParameters = [];
 
+        /**
+         * @var  PageInterface $page
+         */
         if($menuItem->getUrl() == '' && $page = $menuItem->getPage())
         {
-            $pageParameters['route'] = 'page_slug';
+            $pageParameters['route'] = $page->getPageAlias() ? $page->getPageAlias() : PageInterface::PAGE_ROUTE_CMS_NAME;
             $pageParameters['routeParameters'] = [];
 
             if($menuItem->getPageParameter() != '') {
