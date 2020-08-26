@@ -155,16 +155,23 @@ class KnpMenuAdapter
          */
         if($menuItem->getUrl() == '' && $page = $menuItem->getPage())
         {
-            $pageParameters['route'] = $page->getPageAlias() ? $page->getPageAlias() : PageInterface::PAGE_ROUTE_CMS_NAME;
             $pageParameters['routeParameters'] = [];
+
+            if(!is_null($page->getPageAlias()) && $page->getPageAlias() !== '')
+            {
+                $pageParameters['route'] = $page->getPageAlias();
+            }
+            else
+            {
+                $pageParameters['route'] = PageInterface::PAGE_ROUTE_CMS_NAME;
+                $pageParameters['routeParameters']['path'] = $page->getUrl();
+            }
 
             if($menuItem->getPageParameter() != '') {
                 parse_str($menuItem->getPageParameter() ,  $pageParameters['routeParameters']);
             }
 
             if(!$this->cmsManagerSelector->isPageViewable($page, $pageParameters['routeParameters'])) return false;
-
-            $pageParameters['routeParameters']['path'] = $page->getUrl();
         }
 
         $childOptions = array_merge([
