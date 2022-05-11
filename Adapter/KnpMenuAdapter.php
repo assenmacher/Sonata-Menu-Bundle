@@ -17,7 +17,7 @@ use Sonata\PageBundle\Model\PageInterface;
  * Class KnpMenuAdapter
  *
  * Warning !
- * Using or calling this adapter require to install knplabs/knp-menu-bundle :
+ * Using or calling this adapter requires to install knplabs/knp-menu-bundle :
  * `composer require knplabs/knp-menu-bundle`
  *
  * @author Joseph LEMOINE <j.lemoine@ludi.cat>
@@ -80,7 +80,7 @@ class KnpMenuAdapter
     /**
      * Get current site
      *
-     * @return Site
+     * @return null|Site
      */
     public function getCurrentSite() : ?SiteInterface
     {
@@ -92,11 +92,12 @@ class KnpMenuAdapter
 
     /**
      * @param string $alias
+     * @param array $options
      * @param int null|$siteId
      *
      * @return ItemInterface
      */
-    public function createMenu($alias, array $options = [], $siteId = null)
+    public function createMenu(string $alias, array $options = [], $siteId = null): ItemInterface
     {
         $rootOptions = [
             'childrenAttributes' => [],
@@ -126,7 +127,7 @@ class KnpMenuAdapter
      *
      * @return bool
      */
-    public function hasMenu($alias, $siteId = null)
+    public function hasMenu(string $alias, $siteId = null): bool
     {
         if(is_null($siteId))
         {
@@ -143,10 +144,11 @@ class KnpMenuAdapter
 
     /**
      * @param ItemInterface $menu
-     * @param MenuItemInterface      $menuItemInterface
-     * @return ItemInterface
+     * @param MenuItemInterface $menuItemInterface
+     * @param array $options
+     * @return null|ItemInterface
      */
-    protected function recursiveAddItem(ItemInterface $menu, MenuItemInterface $menuItem, array $options = [])
+    protected function recursiveAddItem(ItemInterface $menu, MenuItemInterface $menuItem, array $options = []): ?ItemInterface
     {
         $pageParameters = [];
 
@@ -171,7 +173,11 @@ class KnpMenuAdapter
                 parse_str($menuItem->getPageParameter() ,  $pageParameters['routeParameters']);
             }
 
-            if(!$this->cmsManagerSelector->isPageViewable($page, $pageParameters['routeParameters'])) return false;
+            if($menuItem->getPageAnchor() != '') {
+                $pageParameters['routeParameters']['_fragment'] = $menuItem->getPageAnchor();
+            }
+
+            if(!$this->cmsManagerSelector->isPageViewable($page, $pageParameters['routeParameters'])) return null;
         }
 
         $childOptions = array_merge([

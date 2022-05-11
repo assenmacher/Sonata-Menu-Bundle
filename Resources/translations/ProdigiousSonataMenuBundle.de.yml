@@ -42,7 +42,8 @@ config.label_id: ID
 config.label_alias: Alias
 config.label_title: Titel
 config.label_menu_list: Menüliste
-config.label_page_parameter: Page parameter
+config.label_page_parameter: Page Parameter
+config.label_page_anchor: Page Anker
 config.label_cache_policy: Cache policy
 config.label_safe_labels: HTML im Titel erlauben
 config.label_block_template: Block Template

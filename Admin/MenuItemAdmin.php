@@ -192,6 +192,17 @@ class MenuItemAdmin extends AbstractAdmin
                             'translation_domain' => 'ProdigiousSonataMenuBundle'
                         ]
                     )
+                    ->add('pageAnchor', TextType::class,
+                        [
+                            'label' => 'config.label_page_anchor',
+                            'required' => false,
+                            'attr' => ['style' => 'border:1px solid #ec6d36;'],
+                            'help' => 'Only the anchor string, no leading \'#\'.',
+                        ],
+                        [
+                            'translation_domain' => 'ProdigiousSonataMenuBundle'
+                        ]
+                    )
                 ->end();
         }
 

@@ -43,6 +43,7 @@ config.label_alias: Alias
 config.label_title: Titre
 config.label_menu_list: Menu list
 config.label_page_parameter: Page parameter
+config.label_page_anchor: Page anchor
 config.label_cache_policy: Cache policy
 config.label_safe_labels: Safe labels
 config.label_block_template: Block Template
