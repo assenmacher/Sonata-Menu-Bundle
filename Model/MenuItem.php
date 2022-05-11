@@ -149,6 +149,14 @@ abstract class MenuItem implements MenuItemInterface
     protected $pageParameter;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="page_anchor", type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
+     */
+    protected $pageAnchor;
+
+    /**
      * @var MenuItemInterface
      *
      * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface", inversedBy="children")
@@ -601,6 +609,29 @@ abstract class MenuItem implements MenuItemInterface
     public function getPageParameter()
     {
         return $this->pageParameter;
+    }
+
+    /**
+     * Set page anchor
+     *
+     * @param string $pageAnchor
+     * @return MenuItem
+     */
+    public function setPageAnchor($pageAnchor)
+    {
+        $this->pageAnchor = $pageAnchor;
+
+        return $this;
+    }
+
+    /**
+     * Get page anchor
+     *
+     * @return string
+     */
+    public function getPageAnchor()
+    {
+        return $this->pageAnchor;
     }
 
     /**
