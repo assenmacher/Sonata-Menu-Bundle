@@ -33,9 +33,11 @@ class MenuManager extends BaseEntityManager
     /**
      * Constructor
      *
-     * @param EntityManager $em
+     * @param string $class
+     * @param ManagerRegistry $registry
+     * @param MenuItemManager $menuItemManager
      */
-    public function __construct($class, ManagerRegistry $registry, MenuItemManager $menuItemManager)
+    public function __construct(string $class, ManagerRegistry $registry, MenuItemManager $menuItemManager)
     {
         parent::__construct($class, $registry);
 
@@ -68,7 +70,7 @@ class MenuManager extends BaseEntityManager
      *
      * @return array
      */
-    public function getSiteGroupedAliases()
+    public function getSiteGroupedAliases(): array
     {
         $aliases = [];
 
@@ -82,7 +84,7 @@ class MenuManager extends BaseEntityManager
 
         foreach($aliases as $key=>$aliase)
         {
-            $aliases[$key] = $key.' ('.implode(', ', $aliases[$key]).')';
+            $aliases[$key] = $key.' ('.implode(', ', $aliase).')';
         }
 
         return $aliases;

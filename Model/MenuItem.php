@@ -159,8 +159,8 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * @var MenuItemInterface
      *
-     * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface", inversedBy="children")
-     * @ORM\JoinColumn(name="parent", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface", inversedBy="children", cascade={"persist"})
+     * @ORM\JoinColumn(name="parent", referencedColumnName="id", onDelete="SET NULL", nullable=true)
      */
     protected $parent;
 
@@ -350,7 +350,7 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get linkAttributeClass
      *
-     * @return string 
+     * @return string
      */
     public function getLinkAttributeClass()
     {
@@ -557,7 +557,7 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get locale enabled
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getLocaleEnabled()
     {
