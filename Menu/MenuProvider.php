@@ -41,7 +41,7 @@ class MenuProvider implements MenuProviderInterface
      * @return ItemInterface
      * @throws \InvalidArgumentException if the menu does not exists
      */
-    public function get($name, array $options = [])
+    public function get(string $name, array $options = []): ItemInterface
     {
         return $this->knpMenuAdapter->createMenu($name, $options);
     }
@@ -54,7 +54,7 @@ class MenuProvider implements MenuProviderInterface
      *
      * @return bool
      */
-    public function has($name, array $options = [])
+    public function has(string $name, array $options = []): bool
     {
         return $this->knpMenuAdapter->hasMenu($name);
     }
