@@ -2,7 +2,7 @@
 
 namespace Prodigious\Sonata\MenuBundle\Manager;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\NonUniqueResultException;
