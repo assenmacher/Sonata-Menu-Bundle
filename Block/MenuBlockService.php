@@ -11,7 +11,7 @@ use Sonata\BlockBundle\Block\BlockContextInterface;
 use Sonata\BlockBundle\Block\Service\AbstractAdminBlockService;
 use Sonata\BlockBundle\Meta\Metadata;
 use Sonata\BlockBundle\Model\BlockInterface;
-use Sonata\CoreBundle\Validator\ErrorElement;
+use Sonata\Form\Validator\ErrorElement;
 use Sonata\Form\Type\ImmutableArrayType;
 use Sonata\PageBundle\Page\TemplateManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
