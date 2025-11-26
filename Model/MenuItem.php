@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Prodigious\Sonata\MenuBundle\Model\MenuInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
 use Prodigious\Sonata\MenuBundle\Model\PageInterface;
+use Sonata\MediaBundle\Model\MediaInterface;
 
 /**
  * MenuItem
@@ -184,6 +185,14 @@ abstract class MenuItem implements MenuItemInterface
      * @var int
      */
     protected $level = 0;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="image_id", nullable=true)
+     */
+    protected $imageId;
+    protected $image;
 
     /**
      * Class constructor
@@ -781,6 +790,38 @@ abstract class MenuItem implements MenuItemInterface
     public function getLevelIndentedName($indentedWith = '--') :string
     {
         return str_pad('', (strlen($indentedWith) * $this->getLevel()), $indentedWith) . ' ' . $this->getName();
+    }
+
+    /**
+     * @return int
+     */
+    public function getImageId(): ?int
+    {
+        return $this->imageId;
+    }
+
+    /**
+     * @param int $imageId
+     */
+    public function setImageId(?int $imageId): void
+    {
+        $this->imageId = $imageId;
+    }
+
+    /**
+     * @return MediaInterface
+     */
+    public function getImage(): ?MediaInterface
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param MediaInterface $image
+     */
+    public function setImage(?MediaInterface $image): void
+    {
+        $this->image = $image;
     }
 
     public function __toString()

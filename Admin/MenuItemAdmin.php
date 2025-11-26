@@ -8,12 +8,19 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
+use Sonata\AdminBundle\Form\Type\ModelListType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
 use Prodigious\Sonata\MenuBundle\Form\Type\MenuItemSelectorType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Sonata\MediaBundle\Admin\BaseMediaAdmin;
+use Sonata\MediaBundle\Model\MediaInterface;
+use Prodigious\Sonata\MenuBundle\Manager\MenuItemManager;
+use Symfony\Component\Form\FormBuilderInterface;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
+
 
 class MenuItemAdmin extends AbstractAdmin
 {
@@ -24,7 +31,19 @@ class MenuItemAdmin extends AbstractAdmin
      */
     protected $menuClass;
 
-    public function __construct(string $code, string $class, string $baseControllerName, string $menuClass)
+    /**
+     * @var MenuItemManager
+     */
+    protected $menuItemManager;
+
+    /**
+     * @var BaseMediaAdmin
+     */
+    protected $mediaAdmin;
+
+    protected $rewriteObjects = false;
+
+    public function __construct(string $code, string $class, string $baseControllerName, string $menuClass, MenuItemManager $menuItemManager, BaseMediaAdmin $mediaAdmin)
     {
         parent::__construct(
             $code,
@@ -32,7 +51,9 @@ class MenuItemAdmin extends AbstractAdmin
             $baseControllerName
         );
 
-        $this->menuClass = $menuClass;
+        $this->menuClass       = $menuClass;
+        $this->menuItemManager = $menuItemManager;
+        $this->mediaAdmin      = $mediaAdmin;
     }
 
     protected function configureRoutes(RouteCollection $collection)
@@ -67,6 +88,9 @@ class MenuItemAdmin extends AbstractAdmin
             }
         }
 
+        $this->rewriteObjects = true;
+        $this->menuItemManager->loadObjects($subject);
+
         $formMapper
             ->with('config.label_menu_item',['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
                 ->add('name', TextType::class,
@@ -86,6 +110,11 @@ class MenuItemAdmin extends AbstractAdmin
                         'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
+                ->add($this->getMediaBuilder($form->getFormBuilder(), [
+                    'label' => 'form.label_image',
+                    'name' => 'image',
+                    'translation_domain' => $this->translationDomain,
+                ]))
                 ->add('menu', ModelType::class,
                     [
                         'label' => 'config.label_menu',
@@ -344,6 +373,7 @@ class MenuItemAdmin extends AbstractAdmin
      */
     public function prePersist($object)
     {
+        if($this->rewriteObjects) $this->objectToId($object);
     }
 
     /**
@@ -351,6 +381,74 @@ class MenuItemAdmin extends AbstractAdmin
      */
     public function preUpdate($object)
     {
+        if($this->rewriteObjects) $this->objectToId($object);
+    }
+
+    protected function objectToId(MenuItemInterface $object)
+    {
+        if($object->getImage() instanceof MediaInterface)
+        {
+            $object->setImageId($object->getImage()->getId());
+        }
+        else
+        {
+            $object->setImageId(null);
+        }
+    }
+
+    /**
+     * @param FormBuilderInterface $formBuilder
+     * @param array $options
+     *
+     * @return FormBuilderInterface
+     */
+    protected function getMediaBuilder(FormBuilderInterface $formBuilder, array $options)
+    {
+        $fieldOptions = [
+            'class' => $this->mediaAdmin->getClass(),
+            'model_manager' => $this->mediaAdmin->getModelManager(),
+            'label' => null,
+            'required' => false,
+            'translation_domain' => 'SonataPageBundle',
+            'admin' => $this,
+        ];
+
+        $fieldOptions = array_merge($fieldOptions, $options);
+
+        // simulate an association ...
+        $fieldDescription = $this->mediaAdmin->getModelManager()->getNewFieldDescriptionInstance($this->mediaAdmin->getClass(), 'media', [
+            'translation_domain' => $fieldOptions['translation_domain'],
+        ]);
+        $fieldDescription->setAssociationAdmin($this->mediaAdmin);
+        $fieldDescription->setAdmin($fieldOptions['admin']);
+        $fieldDescription->setOption('edit', 'list');
+        //need context/provider two times, for create and list
+        $fieldDescription->setOption('link_parameters',
+            [
+                'context'  => 'default',
+                'provider' => 'sonata.media.provider.image',
+                'filter'   => [
+                    'context'      => ['value' => 'default'],
+                    'providerName' => ['value' => 'sonata.media.provider.image'],
+
+                ]
+            ]
+        );
+        $fieldDescription->setAssociationMapping([
+            'fieldName' => 'media',
+            'type' => ClassMetadataInfo::MANY_TO_ONE,
+        ]);
+
+        $fieldOptions['sonata_field_description'] = $fieldDescription;
+
+        unset($fieldOptions['admin']);
+        unset($fieldOptions['name']);
+
+        return $formBuilder->create(
+            $options['name'],
+            ModelListType::class,
+            $fieldOptions
+        );
     }
 
     /**
