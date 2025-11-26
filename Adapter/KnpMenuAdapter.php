@@ -155,29 +155,33 @@ class KnpMenuAdapter
         /**
          * @var  PageInterface $page
          */
-        if($menuItem->getUrl() == '' && $page = $menuItem->getPage())
+        if($menuItem->getUrl() == '')
         {
-            $pageParameters['routeParameters'] = [];
+            if($page = $menuItem->getPage()) {
 
-            if(!is_null($page->getPageAlias()) && $page->getPageAlias() !== '')
+                $pageParameters['routeParameters'] = [];
+
+                if (!is_null($page->getPageAlias()) && $page->getPageAlias() !== '') {
+                    $pageParameters['route'] = $page->getPageAlias();
+                } else {
+                    $pageParameters['route'] = PageInterface::PAGE_ROUTE_CMS_NAME;
+                    $pageParameters['routeParameters']['path'] = $page->getUrl();
+                }
+
+                if ($menuItem->getPageParameter() != '') {
+                    parse_str($menuItem->getPageParameter(), $pageParameters['routeParameters']);
+                }
+
+                if ($menuItem->getPageAnchor() != '') {
+                    $pageParameters['routeParameters']['_fragment'] = $menuItem->getPageAnchor();
+                }
+
+                if (!$this->cmsManagerSelector->isPageViewable($page, $pageParameters['routeParameters'])) return null;
+            }
+            else if($menuItem->getPageAnchor())
             {
-                $pageParameters['route'] = $page->getPageAlias();
+                $menuItem->setUrl('#'.$menuItem->getPageAnchor());
             }
-            else
-            {
-                $pageParameters['route'] = PageInterface::PAGE_ROUTE_CMS_NAME;
-                $pageParameters['routeParameters']['path'] = $page->getUrl();
-            }
-
-            if($menuItem->getPageParameter() != '') {
-                parse_str($menuItem->getPageParameter() ,  $pageParameters['routeParameters']);
-            }
-
-            if($menuItem->getPageAnchor() != '') {
-                $pageParameters['routeParameters']['_fragment'] = $menuItem->getPageAnchor();
-            }
-
-            if(!$this->cmsManagerSelector->isPageViewable($page, $pageParameters['routeParameters'])) return null;
         }
 
         $childOptions = array_merge([
