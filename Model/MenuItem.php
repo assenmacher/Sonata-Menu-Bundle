@@ -25,6 +25,7 @@ abstract class MenuItem implements MenuItemInterface
      * @ORM\Column(name="name", type="string", length=255)
      */
     protected $name;
+
     /**
      * @var string
      *
@@ -34,7 +35,15 @@ abstract class MenuItem implements MenuItemInterface
     protected $title;
 
     /**
-     * @var string
+     * @var string|null
+     *
+     * @ORM\Column(name="info_text", type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
+     */
+    protected $infoText;
+
+    /**
+     * @var string|null
      *
      * @ORM\Column(name="url", type="string", length=255, nullable=true)
      * @Gedmo\Translatable
@@ -42,91 +51,91 @@ abstract class MenuItem implements MenuItemInterface
     protected $url;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="attribute_class", type="string", length=255, nullable=true)
      */
     protected $attributeClass;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="attribute_style", type="string", length=255, nullable=true)
      */
     protected $attributeStyle;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="attribute_id", type="string", length=255, nullable=true)
      */
     protected $attributeId;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="link_attribute_class", type="string", length=255, nullable=true)
      */
     protected $linkAttributeClass;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="link_attribute_style", type="string", length=255, nullable=true)
      */
     protected $linkAttributeStyle;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="link_attribute_id", type="string", length=255, nullable=true)
      */
     protected $linkAttributeId;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="label_attribute_class", type="string", length=255, nullable=true)
      */
     protected $labelAttributeClass;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="label_attribute_style", type="string", length=255, nullable=true)
      */
     protected $labelAttributeStyle;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="label_attribute_id", type="string", length=255, nullable=true)
      */
     protected $labelAttributeId;
 
     /**
-     * @var integer
+     * @var integer|null
      *
      * @ORM\Column(name="position", type="smallint", options={"unsigned"=true}, nullable=true)
      */
     protected $position;
 
     /**
-     * @var bool
+     * @var bool|null
      *
      * @ORM\Column(name="target", type="boolean", nullable=true, options={"default":false})
      */
     protected $target;
 
     /**
-     * @var bool
+     * @var bool|null
      *
      * @ORM\Column(name="enabled", type="boolean", nullable=true, options={"default":true})
      */
     protected $enabled;
 
     /**
-     * @var bool
+     * @var bool|null
      *
      * @ORM\Column(name="locale_enabled", type="boolean", nullable=true, options={"default":true})
      * @Gedmo\Translatable
@@ -134,7 +143,7 @@ abstract class MenuItem implements MenuItemInterface
     protected $localeEnabled;
 
     /**
-     * @var PageInterface
+     * @var PageInterface|null
 
      * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\PageInterface")
      * @ORM\JoinColumn(name="page", referencedColumnName="id", onDelete="SET NULL", nullable=true)
@@ -142,7 +151,7 @@ abstract class MenuItem implements MenuItemInterface
     protected $page;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="page_parameter", type="string", length=255, nullable=true)
      * @Gedmo\Translatable
@@ -150,7 +159,7 @@ abstract class MenuItem implements MenuItemInterface
     protected $pageParameter;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(name="page_anchor", type="string", length=255, nullable=true)
      * @Gedmo\Translatable
@@ -158,7 +167,7 @@ abstract class MenuItem implements MenuItemInterface
     protected $pageAnchor;
 
     /**
-     * @var MenuItemInterface
+     * @var MenuItemInterface|null
      *
      * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\MenuItemInterface", inversedBy="children", cascade={"persist"})
      * @ORM\JoinColumn(name="parent", referencedColumnName="id", onDelete="SET NULL", nullable=true)
@@ -187,12 +196,20 @@ abstract class MenuItem implements MenuItemInterface
     protected $level = 0;
 
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(type="integer", name="image_id", nullable=true)
      */
     protected $imageId;
     protected $image;
+
+
+    /**
+     * @var array|null
+     *
+     * @ORM\Column(type="array", name="article_tags", nullable=true)
+     */
+    protected $articleTags;
 
     /**
      * Class constructor
@@ -249,6 +266,30 @@ abstract class MenuItem implements MenuItemInterface
     public function getTitle()
     {
         return $this->title;
+    }
+
+
+    /**
+     * Set info text
+     *
+     * @param string|null $infoText
+     * @return MenuItem
+     */
+    public function setInfoText(?string $infoText)
+    {
+        $this->infoText = $infoText;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string|null
+     */
+    public function getInfoText(): ?string
+    {
+        return $this->infoText;
     }
 
     /**
@@ -785,9 +826,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get level indented name.
      *
+     * @param string $indentedWith
+     *
      * @return string levelIndentedName
      */
-    public function getLevelIndentedName($indentedWith = '--') :string
+    public function getLevelIndentedName(string $indentedWith = '--'): string
     {
         return str_pad('', (strlen($indentedWith) * $this->getLevel()), $indentedWith) . ' ' . $this->getName();
     }
@@ -822,6 +865,38 @@ abstract class MenuItem implements MenuItemInterface
     public function setImage(?MediaInterface $image): void
     {
         $this->image = $image;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasImage(): bool
+    {
+        return !empty($this->getImage());
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getArticleTags(): ?array
+    {
+        return $this->articleTags;
+    }
+
+    /**
+     * @param array|null $articleTags
+     */
+    public function setArticleTags(?array $articleTags): void
+    {
+        $this->articleTags = $articleTags;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasArticleTags(): bool
+    {
+        return !empty($this->getArticleTags());
     }
 
     public function __toString()

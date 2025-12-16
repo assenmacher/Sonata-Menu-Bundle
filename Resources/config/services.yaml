@@ -21,7 +21,7 @@ services:
 
     prodigious_sonata_menuitem.manager:
         class: '%prodigious_sonata_menuitem.manager.class%'
-        arguments: ['%sonata_menu.entity.menu_item%', '@doctrine', '@sonata.media.admin.media']
+        arguments: ['%sonata_menu.entity.menu_item%', '@doctrine', '@sonata.media.manager.media']
         public: true
 
     prodigious_sonata_menu.menu_registry:

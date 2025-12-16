@@ -20,6 +20,8 @@ use Sonata\MediaBundle\Model\MediaInterface;
 use Prodigious\Sonata\MenuBundle\Manager\MenuItemManager;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use App\Sonata\ClassificationBundle\Form\Type\TagSelectorType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 
 class MenuItemAdmin extends AbstractAdmin
@@ -110,11 +112,22 @@ class MenuItemAdmin extends AbstractAdmin
                         'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
-                ->add($this->getMediaBuilder($form->getFormBuilder(), [
-                    'label' => 'form.label_image',
-                    'name' => 'image',
-                    'translation_domain' => $this->translationDomain,
-                ]))
+                ->add('infoText', TextareaType::class,
+                    [
+                        'required' => false,
+                        'attr'    => ["style" => "border:1px solid #ec6d36;"],
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add($this->getMediaBuilder($formMapper->getFormBuilder(),
+                    [
+                        'label' => 'config.label_image',
+                        'name' => 'image',
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                ))
                 ->add('menu', ModelType::class,
                     [
                         'label' => 'config.label_menu',
@@ -169,6 +182,15 @@ class MenuItemAdmin extends AbstractAdmin
                         'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
+                ->add('articleTags', TagSelectorType::class, [ //classification bundle tags
+                    'label'            => 'config.label_article_tags',
+                    'required' => false,
+                    'expanded' => false,
+                    'multiple' => true,
+                    'showEmptyNotiz' => false,
+                    'addGroupTitel' => true,
+                    'context' => 'global', //context created in classification bundle's crud
+                ])
                 ->add('enabled', null,
                     [
                         'label' => 'config.label_enabled',

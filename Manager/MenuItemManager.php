@@ -45,17 +45,21 @@ class MenuItemManager extends BaseEntityManager
 
     /**
      * @param object $entity
+     *
+     * @return null|object
      */
-    public function loadObjects($entity, $includeChilds = false)
+    public function loadObjects($entity)
     {
-        if(is_null($entity)) return;
+        if(is_null($entity)) return $entity;
 
         switch (true)
         {
             case $entity instanceof MenuItemInterface:
-                if(!$entity->getImage()) $entity->setImage($this->loadMedia($entity->getImageId()));
+                if(!$entity->hasImage() && $entity->getImageId()) $entity->setImage($this->loadMedia($entity->getImageId()));
                 break;
         }
+
+        return $entity;
     }
 
     /**

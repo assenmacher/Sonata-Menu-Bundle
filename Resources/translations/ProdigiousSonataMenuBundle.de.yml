@@ -66,3 +66,7 @@ config.label_title_class: Titel CSS Class
 config.label_list_class: Breadcrumb CSS Klasse (im <ul>/<ol>-Tag)
 config.label_list_item_class: Breadcrumb Elemente CSS Klasse (im <li>-Tag)
 config.field_group_options: Hompage
+config.label_image: Bild
+config.label_article_tags: Beitrag-Tags
+config.label_load_objects: Images zu allen Menüpunkten laden.
+config.help_load_objects: Wenn Menüpunkten Bilder zugewiesen sind, werden diese direkt geladen (hasImage() / getImage()). Andernfalls werden nur die IDs der Bilder geladen, was die Performance verbessert (getImageId()).

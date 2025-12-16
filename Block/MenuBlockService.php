@@ -3,6 +3,7 @@ namespace Prodigious\Sonata\MenuBundle\Block;
 
 use Prodigious\Sonata\MenuBundle\Menu\MenuRegistry;
 use Prodigious\Sonata\MenuBundle\Menu\MenuRegistryInterface;
+use Prodigious\Sonata\MenuBundle\Manager\MenuItemManager;
 
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Provider\MenuProviderInterface;
@@ -21,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @author Hugo Briand <briand@ekino.com>
@@ -48,18 +50,32 @@ class MenuBlockService extends AbstractAdminBlockService
     protected $templateManager;
 
     /**
+     * @var MenuItemManager
+     */
+    protected $menuItemManager;
+
+    /**
+     * The translator component.
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
      * @param string                     $name
      * @param EngineInterface            $templating
      * @param TemplateManagerInterface   $templateManager
      * @param MenuProviderInterface      $menuProvider
+     * @param MenuItemManager            $menuItemManager
      * @param MenuRegistryInterface|null $menuRegistry
      */
-    public function __construct($name, EngineInterface $templating, TemplateManagerInterface $templateManager, MenuProviderInterface $menuProvider, $menuRegistry = null)
+    public function __construct($name, EngineInterface $templating, TemplateManagerInterface $templateManager, MenuProviderInterface $menuProvider, MenuItemManager $menuItemManager, TranslatorInterface $translator, $menuRegistry = null)
     {
         parent::__construct($name, $templating);
 
-        $this->menuProvider = $menuProvider;
+        $this->menuProvider    = $menuProvider;
         $this->templateManager = $templateManager;
+        $this->menuItemManager = $menuItemManager;
+        $this->translator      = $translator;
 
         if ($menuRegistry instanceof MenuRegistryInterface) {
             $this->menuRegistry = $menuRegistry;
@@ -94,12 +110,13 @@ class MenuBlockService extends AbstractAdminBlockService
         }
 
         $responseSettings = [
-            'menu' => $settings['menu_name'],
-            'menu_path' => [],
-            'menu_options' => $this->getMenuOptions($blockContext->getSettings()),
-            'block' => $blockContext->getBlock(),
-            'context' => $blockContext,
-            'settings' => $settings,
+            'menu'              => $settings['menu_name'],
+            'menu_path'         => [],
+            'menu_options'      => $this->getMenuOptions($settings),
+            'block'             => $blockContext->getBlock(),
+            'context'           => $blockContext,
+            'settings'          => $settings,
+            'menu_item_manager' => $this->menuItemManager,
         ];
 
         if ('private' === $blockContext->getSetting('cache_policy')) {
@@ -182,6 +199,7 @@ class MenuBlockService extends AbstractAdminBlockService
             'menu_class' => 'menu_list',
             'children_class' => 'menu_list_item',
             'menu_template' => null,
+            'load_objects' => false,
         ];
     }
 
@@ -320,6 +338,11 @@ class MenuBlockService extends AbstractAdminBlockService
                 'label' => 'config.label_menu_template',
                 'sonata_help'  => 'If not a Bundel path (starting with a "@"), use only the template name/path relative to "/templates/'.$this->templatePath.'" like "menu.html.twig". If you leave the field blank, the default KNP-Menu Bundel template will be used.',
             ]],
+            ['load_objects', CheckboxType::class, [
+                'required' => false,
+                'label' => 'config.label_load_objects',
+                'sonata_help'  => $this->translator->trans('config.help_load_objects', [], 'ProdigiousSonataMenuBundle'),
+            ]],
         ];
     }
 
@@ -346,6 +369,7 @@ class MenuBlockService extends AbstractAdminBlockService
             'matching_depth' => 'matchingDepth',
             'menu_class' => 'menu_class',
             'children_class' => 'children_class',
+            'load_objects' => 'load_objects',
         ];
 
         $options = [];

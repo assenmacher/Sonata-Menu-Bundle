@@ -113,7 +113,8 @@ class KnpMenuAdapter
         if($menu = $this->menuManager->loadByAliasAndSiteId($alias, $siteId, MenuManager::STATUS_ENABLED)) {
             $items = $this->menuManager->getRootItems($menu, MenuManager::STATUS_ENABLED);
 
-            foreach ($items as $item) {
+            foreach ($items as $item)
+            {
                 $this->recursiveAddItem($knp, $item, $options);
             }
         }
@@ -184,6 +185,8 @@ class KnpMenuAdapter
             }
         }
 
+        if(!empty($options['load_objects'])) $this->menuItemManager->loadObjects($menuItem);
+
         $childOptions = array_merge([
             'uri' => $menuItem->getUrl(),
             'label' => $menuItem->getTitle(),
@@ -203,6 +206,9 @@ class KnpMenuAdapter
                 'class'  => $menuItem->getLabelAttributeClass(),
                 'style'  => $menuItem->getLabelAttributeStyle(),
                 'id'     => $menuItem->getLabelAttributeId(),
+            ],
+            'extras' => [
+                'menuItem' => $menuItem,
             ],
         ], $pageParameters);
 

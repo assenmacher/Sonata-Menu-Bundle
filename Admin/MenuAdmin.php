@@ -8,6 +8,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -15,6 +16,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class MenuAdmin extends AbstractAdmin
 {
     protected $baseRoutePattern = 'sonata/menu';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureDefaultSortValues(array &$sortValues)
+    {
+        $sortValues = [
+            DatagridInterface::SORT_BY    => 'name',
+            DatagridInterface::SORT_ORDER => 'ASC',
+        ];
+    }
 
     /**
      * {@inheritdoc}
@@ -86,8 +98,8 @@ class MenuAdmin extends AbstractAdmin
     {
         $listMapper
             ->addIdentifier('id', null, ['label' => 'config.label_id', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
-            ->addIdentifier('alias', null, ['label' => 'config.label_alias', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
             ->addIdentifier('name', null, ['label' => 'config.label_name', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
+            ->addIdentifier('alias', null, ['label' => 'config.label_alias', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
             ->add('site.name', null, ['label' => 'config.label_site', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
             ->add('enabled', null, ['label' => 'config.label_enabled', 'translation_domain' => 'ProdigiousSonataMenuBundle', 'editable' => true])
             ->add('localeEnabled', null, ['label' => 'config.label_locale_enabled', 'translation_domain' => 'ProdigiousSonataMenuBundle', 'editable' => true])
