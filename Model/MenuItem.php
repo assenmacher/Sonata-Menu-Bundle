@@ -198,18 +198,52 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * @var int|null
      *
-     * @ORM\Column(type="integer", name="image_id", nullable=true)
+     * @ORM\Column(name="image_id", type="integer", nullable=true)
      */
     protected $imageId;
     protected $image;
 
-
     /**
      * @var array|null
      *
-     * @ORM\Column(type="array", name="article_tags", nullable=true)
+     * @ORM\Column(name="article_tags", type="array", nullable=true)
      */
     protected $articleTags;
+
+    /**
+     * @var integer|null
+     *
+     * @ORM\Column(name="article_count", type="smallint", options={"unsigned"=true}, nullable=true)
+     */
+    protected $articleCounter;
+
+    /**
+     * @var integer|null
+     *
+     * @ORM\Column(name="spalten", type="smallint", options={"unsigned"=true}, nullable=true)
+     */
+    protected $columns;
+
+    /**
+     * @var integer|null
+     *
+     * @ORM\Column(name="spalte", type="smallint", options={"unsigned"=true}, nullable=true)
+     */
+    protected $column;
+
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="has_overlines", type="boolean", nullable=true, options={"default":false})
+     */
+    protected $hasOverlines;
+
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="has_groups", type="boolean", nullable=true, options={"default":false})
+     */
+    protected $hasGroups;
 
     /**
      * Class constructor
@@ -804,7 +838,7 @@ abstract class MenuItem implements MenuItemInterface
      *
      * @return int
      */
-    public function getLevel() :int
+    public function getLevel(): int
     {
         return $this->level;
     }
@@ -816,7 +850,7 @@ abstract class MenuItem implements MenuItemInterface
 
      * @return Page
      */
-    public function setLevel(int $level) :MenuItem
+    public function setLevel(int $level): MenuItem
     {
         $this->level = $level;
 
@@ -897,6 +931,124 @@ abstract class MenuItem implements MenuItemInterface
     public function hasArticleTags(): bool
     {
         return !empty($this->getArticleTags());
+    }
+
+    /**
+     * get article counter
+     *
+     * @return null|int
+     */
+    public function getArticleCounter(): ?int
+    {
+        return $this->articleCounter;
+    }
+
+    /**
+     * set article counter
+     *
+     * @param null|int $articleCounter
+
+     * @return MenuItem
+     */
+    public function setArticleCounter(?int $articleCounter) :MenuItem
+    {
+        $this->articleCounter = $articleCounter;
+
+        return $this;
+    }
+
+    /**
+     * get columns
+     *
+     * @return null|int
+     */
+    public function getColumns(): ?int
+    {
+        return $this->columns;
+    }
+
+    /**
+     * set columns
+     *
+     * @param null|int $columns
+
+     * @return MenuItem
+     */
+    public function setColumns(?int $columns) :MenuItem
+    {
+        $this->columns = $columns;
+
+        return $this;
+    }
+
+    /**
+     * get column
+     *
+     * @return null|int
+     */
+    public function getColumn(): ?int
+    {
+        return $this->column;
+    }
+
+    /**
+     * set column
+     *
+     * @param null|int $column
+
+     * @return MenuItem
+     */
+    public function setColumn(?int $column) :MenuItem
+    {
+        $this->column = $column;
+
+        return $this;
+    }
+
+    /**
+     * Set hasOverlines
+     *
+     * @param boolean $hasOverlines
+     * @return MenuItem
+     */
+    public function setHasOverlines($hasOverlines)
+    {
+        $this->hasOverlines = $hasOverlines;
+
+        return $this;
+    }
+
+    /**
+     * Get hasOverlines
+     *
+     * @return boolean
+     */
+    public function getHasOverlines()
+    {
+        return $this->hasOverlines;
+    }
+
+    /**
+     * Set hasGroups
+     *
+     * @param boolean $hasGroups
+     * @return MenuItem
+     */
+    public function setHasGroups($hasGroups)
+    {
+        $this->hasGroups = $hasGroups;
+
+        return $this;
+    }
+
+    /**
+     * Get hasGroups
+     *
+     * @return boolean
+     */
+    public function getHasGroups()
+    {
+        return $this->hasGroups;
     }
 
     public function __toString()

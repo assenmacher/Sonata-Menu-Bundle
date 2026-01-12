@@ -112,15 +112,6 @@ class MenuItemAdmin extends AbstractAdmin
                         'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
-                ->add('infoText', TextareaType::class,
-                    [
-                        'required' => false,
-                        'attr'    => ["style" => "border:1px solid #ec6d36;"],
-                    ],
-                    [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle',
-                    ]
-                )
                 ->add($this->getMediaBuilder($formMapper->getFormBuilder(),
                     [
                         'label' => 'config.label_image',
@@ -182,15 +173,6 @@ class MenuItemAdmin extends AbstractAdmin
                         'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
-                ->add('articleTags', TagSelectorType::class, [ //classification bundle tags
-                    'label'            => 'config.label_article_tags',
-                    'required' => false,
-                    'expanded' => false,
-                    'multiple' => true,
-                    'showEmptyNotiz' => false,
-                    'addGroupTitel' => true,
-                    'context' => 'global', //context created in classification bundle's crud
-                ])
                 ->add('enabled', null,
                     [
                         'label' => 'config.label_enabled',
@@ -204,6 +186,104 @@ class MenuItemAdmin extends AbstractAdmin
                     [
                         'label' => 'config.label_locale_enabled',
                         'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+            ->end()
+        ;
+
+        $formMapper
+            ->with('config.label_menu_meganenu', ['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
+                ->add('infoText', TextareaType::class,
+                    [
+                        'required' => false,
+                        'attr'    => ["style" => "border:1px solid #ec6d36;"],
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('articleTags', TagSelectorType::class, [ //classification bundle tags
+                    'label'          => 'config.label_article_tags',
+                    'required'       => false,
+                    'expanded'       => false,
+                    'multiple'       => true,
+                    'showEmptyNotiz' => false,
+                    'addGroupTitel'  => true,
+                    'context'        => 'global', //context created in classification bundle's crud
+                ])
+                ->add('articleCounter', ChoiceType::class,
+                    [
+                        'choices' => [
+                            '1' => 1,
+                            '2' => 2,
+                            '3' => 3,
+                            '4' => 4,
+                            '5' => 5,
+                            '6' => 6,
+                        ],
+                        'expanded'    => false,
+                        'multiple'    => false,
+                        'required'    => false,
+                        'placeholder' => 'config.label_select',
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('hasOverlines', null,
+                    [
+                        'label' => 'config.label_hasOverlines',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('hasGroups', null,
+                    [
+                        'label' => 'config.label_hasGroups',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('columns', ChoiceType::class,
+                    [
+                        'choices' => [
+                            '1' => 1,
+                            '2' => 2,
+                            '3' => 3,
+                            '4' => 4,
+                            '5' => 5,
+                            '6' => 6,
+                        ],
+                        'expanded'    => false,
+                        'multiple'    => false,
+                        'required'    => false,
+                        'placeholder' => 'config.label_select',
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('column', ChoiceType::class,
+                    [
+                        'choices' => [
+                            '1' => 1,
+                            '2' => 2,
+                            '3' => 3,
+                            '4' => 4,
+                            '5' => 5,
+                            '6' => 6,
+                        ],
+                        'expanded'    => false,
+                        'multiple'    => false,
+                        'required'    => false,
+                        'placeholder' => 'config.label_select',
                     ],
                     [
                         'translation_domain' => 'ProdigiousSonataMenuBundle',
@@ -254,12 +334,13 @@ class MenuItemAdmin extends AbstractAdmin
                             'translation_domain' => 'ProdigiousSonataMenuBundle'
                         ]
                     )
-                ->end();
+                ->end()
+            ;
         }
 
 
         $formMapper
-            ->with('config.label_menu_link', ['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
+            ->with('config.label_menu_link', ['class' => 'col-md-6 app-clearfix', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
                 ->add('url', TextType::class,
                     [
                         'label' => 'config.label_custom_url',
@@ -307,7 +388,8 @@ class MenuItemAdmin extends AbstractAdmin
                         'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
-            ->end();
+            ->end()
+        ;
 
         $formMapper
             ->with('config.label_menu_label', ['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
@@ -338,7 +420,8 @@ class MenuItemAdmin extends AbstractAdmin
                         'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
-            ->end();
+            ->end()
+        ;
     }
 
     /**
