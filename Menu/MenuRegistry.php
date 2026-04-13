@@ -7,9 +7,14 @@ use Prodigious\Sonata\MenuBundle\Menu\MenuRegistryInterface;
 final class MenuRegistry implements MenuRegistryInterface
 {
     /**
-     * @var string[]
+     * @var null|string[]
      */
-    private $names = [];
+    private $names = null;
+
+    /**
+     * @var MenuManager
+     */
+    private MenuManager $menuManager;
 
     /**
      * MenuRegistry constructor.
@@ -18,7 +23,17 @@ final class MenuRegistry implements MenuRegistryInterface
      */
     public function __construct(MenuManager $menuManager)
     {
-        $this->names = $menuManager->getSiteGroupedAliases();
+        $this->menuManager = $menuManager;
+    }
+
+    /**
+     * MenuRegistry constructor.
+     *
+     * @param MenuManager $menuManager
+     */
+    public function init()
+    {
+        if(is_null($this->names)) $this->names = $this->menuManager->getSiteGroupedAliases();
     }
 
     /**
@@ -26,6 +41,8 @@ final class MenuRegistry implements MenuRegistryInterface
      */
     public function add($menu)
     {
+        $this->init();
+
         $this->names[$menu] = $menu;
     }
 
@@ -34,6 +51,8 @@ final class MenuRegistry implements MenuRegistryInterface
      */
     public function getAliasNames()
     {
+        $this->init();
+
         return $this->names;
     }
 
@@ -42,6 +61,8 @@ final class MenuRegistry implements MenuRegistryInterface
      */
     public function hasAliasName($name)
     {
+        $this->init();
+
         return array_key_exists($name, $this->names);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Prodigious\Sonata\MenuBundle\Adapter;
 
+use App\Sonata\PageBundle\Route\CmsPageRouteProvider;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
@@ -10,8 +11,12 @@ use Prodigious\Sonata\MenuBundle\Manager\MenuItemManager;
 
 use Sonata\PageBundle\Site\SiteSelectorInterface;
 use Sonata\PageBundle\CmsManager\CmsManagerSelectorInterface;
-use Sonata\PageBundle\Model\SiteInterface;
-use Sonata\PageBundle\Model\PageInterface;
+use App\Sonata\PageBundle\Model\SiteInterface as AppSonataSiteInterface;
+use App\Sonata\PageBundle\Model\PageInterface as AppSonataPageInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Doctrine\ORM\Proxy\Proxy;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class KnpMenuAdapter
@@ -40,7 +45,7 @@ class KnpMenuAdapter
     protected $menuItemManager;
 
     /**
-     * @var  SiteInterface $site
+     * @var  AppSonataSiteInterface $site
      */
     protected $site = null;
 
@@ -55,6 +60,21 @@ class KnpMenuAdapter
     protected $cmsManagerSelector;
 
     /**
+     * @var CmsPageRouteProvider
+     */
+    protected $cmsPageRouteProvider;
+
+    /**
+     * @var RouterInterface
+     */
+    protected $router;
+
+    /**
+     * @var RequestStack
+     */
+    protected $requestStack;
+
+    /**
      * KnpMenuAdapter constructor.
      *
      * @param FactoryInterface $factory
@@ -62,27 +82,36 @@ class KnpMenuAdapter
      * @param MenuItemManager $menuItemManager
      * @param SiteSelectorInterface $siteSelector
      * @param CmsManagerSelectorInterface $cmsManagerSelector
+     * @param CmsPageRouteProvider $cmsPageRouteProvider
+     * @param RouterInterface $router
+     * @param RequestStack $requestStack
      */
     public function __construct(
         FactoryInterface $factory,
         MenuManager $menuManager,
         MenuItemManager $menuItemManager,
         SiteSelectorInterface $siteSelector,
-        CmsManagerSelectorInterface $cmsManagerSelector
+        CmsManagerSelectorInterface $cmsManagerSelector,
+        CmsPageRouteProvider $cmsPageRouteProvider,
+        RouterInterface $router,
+        RequestStack $requestStack
     ) {
         $this->factory = $factory;
         $this->menuManager = $menuManager;
         $this->menuItemManager = $menuItemManager;
         $this->siteSelector = $siteSelector;
         $this->cmsManagerSelector = $cmsManagerSelector;
+        $this->cmsPageRouteProvider = $cmsPageRouteProvider;
+        $this->router = $router;
+        $this->requestStack = $requestStack;
     }
 
     /**
      * Get current site
      *
-     * @return null|Site
+     * @return null|AppSonataSiteInterface
      */
-    public function getCurrentSite() : ?SiteInterface
+    public function getCurrentSite() : ?AppSonataSiteInterface
     {
         if(is_null($this->site)) {
             $this->site = $this->siteSelector->retrieve();
@@ -113,7 +142,8 @@ class KnpMenuAdapter
         if($menu = $this->menuManager->loadByAliasAndSiteId($alias, $siteId, MenuManager::STATUS_ENABLED)) {
             $items = $this->menuManager->getRootItems($menu, MenuManager::STATUS_ENABLED);
 
-            foreach ($items as $item) {
+            foreach ($items as $item)
+            {
                 $this->recursiveAddItem($knp, $item, $options);
             }
         }
@@ -150,42 +180,77 @@ class KnpMenuAdapter
      */
     protected function recursiveAddItem(ItemInterface $menu, MenuItemInterface $menuItem, array $options = []): ?ItemInterface
     {
-        $pageParameters = [];
+        $routes = [];
+        $uri    = '';
 
         /**
-         * @var  PageInterface $page
+         * @var  AppSonataPageInterface $page
          */
         if($menuItem->getUrl() == '')
         {
             if($page = $menuItem->getPage()) {
 
-                $pageParameters['routeParameters'] = [];
-
-                if (!is_null($page->getPageAlias()) && $page->getPageAlias() !== '') {
-                    $pageParameters['route'] = $page->getPageAlias();
-                } else {
-                    $pageParameters['route'] = PageInterface::PAGE_ROUTE_CMS_NAME;
-                    $pageParameters['routeParameters']['path'] = $page->getUrl();
+                if($page instanceof Proxy && !$page->__isInitialized()) {
+                    $page = $this->cmsManagerSelector->retrieve()->getPageById($page->getId(), false);
                 }
 
+                $routeParameters = [];
+
                 if ($menuItem->getPageParameter() != '') {
-                    parse_str($menuItem->getPageParameter(), $pageParameters['routeParameters']);
+                    $pageParameter = [];
+                    parse_str($menuItem->getPageParameter(), $pageParameter);
+
+                    $routeParameters = array_merge($pageParameter, $routeParameters);
                 }
 
                 if ($menuItem->getPageAnchor() != '') {
-                    $pageParameters['routeParameters']['_fragment'] = $menuItem->getPageAnchor();
+                    $routeParameters['_fragment'] = $menuItem->getPageAnchor();
                 }
 
-                if (!$this->cmsManagerSelector->isPageViewable($page, $pageParameters['routeParameters'])) return null;
+                if (!$this->cmsManagerSelector->isPageViewable($page, $routeParameters)) return null;
+
+                $route = $this->cmsPageRouteProvider->getRouteByName($page);
+
+                $uri = $this->router->generate($route, $routeParameters);
+
+                $pathVariables = $route->compile()->getPathVariables();
+
+                //remove none route specific parameters
+                $routeParameters = array_intersect_key($routeParameters, array_flip($pathVariables));
+
+                $routeParameters['path'] = $page->getUrl();
+
+                $routes = [
+                    [
+                        'route' => AppSonataPageInterface::PAGE_ROUTE_CMS_NAME,
+                        'parameters' => $routeParameters,
+                    ]
+                ];
             }
             else if($menuItem->getPageAnchor())
             {
-                $menuItem->setUrl('#'.$menuItem->getPageAnchor());
+                $uri = '#'.$menuItem->getPageAnchor();
+            }
+        }
+        else
+        {
+            $uri = $menuItem->getUrl();
+        }
+
+        if(!empty($options['load_objects'])) $this->menuItemManager->loadObjects($menuItem);
+
+        $external = false;
+
+        if($host = parse_url($uri, PHP_URL_HOST))
+        {
+            if($request = $this->requestStack->getCurrentRequest())
+            {
+                if(strtolower($host) !== strtolower($request->getHost())) $external = true;
             }
         }
 
-        $childOptions = array_merge([
-            'uri' => $menuItem->getUrl(),
+        $childOptions = [
+            'uri' => $uri,
             'label' => $menuItem->getTitle(),
             'childrenAttributes' => [],
             'attributes' => [
@@ -204,7 +269,12 @@ class KnpMenuAdapter
                 'style'  => $menuItem->getLabelAttributeStyle(),
                 'id'     => $menuItem->getLabelAttributeId(),
             ],
-        ], $pageParameters);
+            'extras' => [
+                'menuItem' => $menuItem,
+                'routes'   => $routes,
+                'external' => $external,
+            ],
+        ];
 
         if(!empty($options['children_class'])) $childOptions['childrenAttributes'] = ['class' => $options['children_class']];
 
