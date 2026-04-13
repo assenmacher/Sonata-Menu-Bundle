@@ -69,6 +69,15 @@ class MenuAdmin extends AbstractAdmin
                         'translation_domain' => 'ProdigiousSonataMenuBundle',
                     ]
                 )
+                ->add('isMegamenu', null,
+                    [
+                        'label' => 'config.label_isMegamenu',
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
             ->end()
         ->end();
 

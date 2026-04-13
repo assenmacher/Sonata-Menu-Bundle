@@ -1,6 +1,8 @@
 <?php
 namespace Prodigious\Sonata\MenuBundle\Model;
 
-interface SiteInterface
+use App\Sonata\PageBundle\Model\SiteInterface as AppSonataSiteInterface;
+
+interface SiteInterface extends AppSonataSiteInterface
 {
 }

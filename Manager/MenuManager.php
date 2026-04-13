@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\NonUniqueResultException;
 use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
+use Gedmo\Translatable\TranslatableListener;
 use Prodigious\Sonata\MenuBundle\Manager\MenuItemManager;
 use Prodigious\Sonata\MenuBundle\Model\MenuInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
@@ -31,17 +32,23 @@ class MenuManager extends BaseEntityManager
     protected $menuItemManager;
 
     /**
+     * @var TranslatableListener
+     */
+    private TranslatableListener $translatableListener;
+
+    /**
      * Constructor
      *
      * @param string $class
      * @param ManagerRegistry $registry
      * @param MenuItemManager $menuItemManager
      */
-    public function __construct(string $class, ManagerRegistry $registry, MenuItemManager $menuItemManager)
+    public function __construct(string $class, ManagerRegistry $registry, MenuItemManager $menuItemManager, TranslatableListener $translatableListener)
     {
         parent::__construct($class, $registry);
 
         $this->menuItemManager = $menuItemManager;
+        $this->translatableListener = $translatableListener;
     }
 
     /**
@@ -149,7 +156,8 @@ class MenuManager extends BaseEntityManager
     {
         $queryBuilder = $this->getRepository()
             ->createQueryBuilder('m')
-            ->select('m');
+            ->select('m')
+        ;
 
         foreach ($criteria as $field=>$value) {
             switch ($field) {
@@ -165,6 +173,11 @@ class MenuManager extends BaseEntityManager
 
         $query = $queryBuilder->getQuery();
 
+        //translation query cache issue, only the first call for a transaltion works...
+        $query->useQueryCache(false);
+        $query->enableResultCache();
+
+        $query->setHint( TranslatableListener::HINT_TRANSLATABLE_LOCALE, $this->translatableListener->getListenerLocale() );
         $query->setHint( Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class );
 
         return $query;
@@ -198,7 +211,7 @@ class MenuManager extends BaseEntityManager
      */
     public function getMenuItems(MenuInterface $menu, $root = self::ITEM_ALL, $status = self::STATUS_ALL, $frontendCall = false)
     {
-        $menuItems = $menu->getMenuItems();
+        $menuItems = $this->menuItemManager->getMenuItemsByMenu($menu);
 
         return array_filter($menuItems, function(MenuItemInterface $menuItem) use ($root, $status) {
             // Check root parameter

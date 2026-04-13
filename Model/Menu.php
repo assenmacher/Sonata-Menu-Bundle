@@ -7,6 +7,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
 use Prodigious\Sonata\MenuBundle\Model\SiteInterface;
+use App\Sonata\PageBundle\Model\SiteInterface as AppSonataSiteInterface;
 
 /**
  * Menu
@@ -47,7 +48,7 @@ abstract class Menu implements MenuInterface
     protected $localeEnabled;
 
     /**
-     * @var SiteInterface
+     * @var AppSonataSiteInterface
 
      * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\SiteInterface")
      * @ORM\JoinColumn(name="site", referencedColumnName="id", onDelete="SET NULL", nullable=true)
@@ -63,6 +64,13 @@ abstract class Menu implements MenuInterface
     protected $menuItems;
 
     /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="is_megamenu", type="boolean", nullable=true, options={"default":false})
+     */
+    protected $isMegamenu;
+
+    /**
      * Constructor
      *
      */
@@ -75,9 +83,10 @@ abstract class Menu implements MenuInterface
      * Set name
      *
      * @param string $name
-     * @return Menu
+     *
+     * @return MenuInterface
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -87,9 +96,9 @@ abstract class Menu implements MenuInterface
     /**
      * Get name
      *
-     * @return string 
+     * @return null|string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -98,9 +107,10 @@ abstract class Menu implements MenuInterface
      * Set alias
      *
      * @param string $alias
-     * @return Menu
+     *
+     * @return MenuInterface
      */
-    public function setAlias($alias)
+    public function setAlias(string $alias): self
     {
         $this->alias = $alias;
 
@@ -110,9 +120,9 @@ abstract class Menu implements MenuInterface
     /**
      * Get alias
      *
-     * @return string 
+     * @return null|string
      */
-    public function getAlias()
+    public function getAlias(): ?string
     {
         return $this->alias;
     }
@@ -120,11 +130,11 @@ abstract class Menu implements MenuInterface
     /**
      * Set site
      *
-     * @param null|SiteInterface $site
+     * @param null|AppSonataSiteInterface $site
      *
-     * @return Menu
+     * @return MenuInterface
      */
-    public function setSite($site)
+    public function setSite(?AppSonataSiteInterface $site): self
     {
         $this->site = $site;
 
@@ -134,9 +144,9 @@ abstract class Menu implements MenuInterface
     /**
      * Get site
      *
-     * @return null|SiteInterface
+     * @return null|AppSonataSiteInterface
      */
-    public function getSite()
+    public function getSite(): ?AppSonataSiteInterface
     {
         return $this->site;
     }
@@ -145,9 +155,10 @@ abstract class Menu implements MenuInterface
      * Set enabled
      *
      * @param boolean $enabled
-     * @return MenuItem
+     *
+     * @return MenuInterface
      */
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
 
@@ -157,9 +168,9 @@ abstract class Menu implements MenuInterface
     /**
      * Get enabled
      *
-     * @return boolean
+     * @return null|boolean
      */
-    public function getEnabled()
+    public function getEnabled(): ?bool
     {
         return $this->enabled;
     }
@@ -167,9 +178,9 @@ abstract class Menu implements MenuInterface
     /**
      * Get locale enabled
      *
-     * @return boolean
+     * @return null|boolean
      */
-    public function getLocaleEnabled()
+    public function getLocaleEnabled(): ?bool
     {
         return $this->localeEnabled;
     }
@@ -179,9 +190,10 @@ abstract class Menu implements MenuInterface
      * Set locale enabled
      *
      * @param boolean $enabled
-     * @return Menu
+     *
+     * @return MenuInterface
      */
-    public function setLocaleEnabled($localeEnabled)
+    public function setLocaleEnabled(bool $localeEnabled): self
     {
         $this->localeEnabled = $localeEnabled;
 
@@ -193,9 +205,9 @@ abstract class Menu implements MenuInterface
      *
      * @param MenuItemInterface $menuItem
      *
-     * @return Menu
+     * @return MenuInterface
      */
-    public function addMenuItem(MenuItemInterface $menuItem)
+    public function addMenuItem(MenuItemInterface $menuItem): self
     {
         $this->menuItems->add($menuItem);
 
@@ -208,10 +220,14 @@ abstract class Menu implements MenuInterface
      * Remove menuItem
      *
      * @param MenuItemInterface $menuItem
+     *
+     * @return MenuInterface
      */
-    public function removeMenuItem(MenuItemInterface $menuItem)
+    public function removeMenuItem(MenuItemInterface $menuItem): self
     {
         $this->menuItems->removeElement($menuItem);
+
+        return $this;
     }
 
     /**
@@ -219,9 +235,9 @@ abstract class Menu implements MenuInterface
      *
      * @param ArrayCollection $menuItems
      *
-     * @return Menu
+     * @return MenuInterface
      */
-    public function setMenuItems(ArrayCollection $menuItems)
+    public function setMenuItems(ArrayCollection $menuItems): self
     {
         $this->menuItems = $menuItems;
 
@@ -233,12 +249,38 @@ abstract class Menu implements MenuInterface
      *
      * @return array
      */
-    public function getMenuItems()
+    public function getMenuItems(): array
     {   
         return $this->menuItems->toArray();
     }
 
-    public function __toString()
+    /**
+     * Set isMegamenu
+     *
+     * @param boolean $isMegamenu
+     *
+     * @return MenuInterface
+     */
+    public function setIsMegamenu(bool $isMegamenu): self
+    {
+        $this->isMegamenu = $isMegamenu;
+
+        return $this;
+    }
+
+    /**
+     * Get isMegamenu
+     *
+     * @return null|boolean
+     */
+    public function getIsMegamenu(): ?bool
+    {
+        return $this->isMegamenu;
+    }
+
+
+
+    public function __toString(): string
     {
         return isset($this->name) ? $this->name : "";
     }

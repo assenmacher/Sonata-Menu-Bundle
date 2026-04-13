@@ -11,6 +11,9 @@ services:
             - '@prodigious_sonata_menuitem.manager'
             - '@sonata.page.site.selector'
             - '@sonata.page.cms_manager_selector'
+            - '@app.sonata_page.route.provider'
+            - '@router'
+            - '@request_stack'
     prodigious_sonata_menu.twig.knp:
         class: '%prodigious_sonata_menu.twig.knp.class%'
         arguments:

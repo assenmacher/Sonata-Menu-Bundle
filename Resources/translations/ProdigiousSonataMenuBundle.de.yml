@@ -66,7 +66,17 @@ config.label_title_class: Titel CSS Class
 config.label_list_class: Breadcrumb CSS Klasse (im <ul>/<ol>-Tag)
 config.label_list_item_class: Breadcrumb Elemente CSS Klasse (im <li>-Tag)
 config.field_group_options: Hompage
+config.label_isMegamenu: Ist ein Megamenü
 config.label_image: Bild
 config.label_article_tags: Beitrag-Tags
+config.label_article_counter: Max. Anzahl an Beitrags-Teasern, der benötigte Platz wird reserviert.
 config.label_load_objects: Images zu allen Menüpunkten laden.
 config.help_load_objects: Wenn Menüpunkten Bilder zugewiesen sind, werden diese direkt geladen (hasImage() / getImage()). Andernfalls werden nur die IDs der Bilder geladen, was die Performance verbessert (getImageId()).
+config.label_icon_class: Icon CSS Klasse
+config.label_menu_meganenu: Megamenü Konfiguration (wenn im Template/js/css entsprechend unterstützt)
+config.label_hasGroups: Sollen die Menüelemente in Gruppen eingeteilt werden? Wenn ja, dann wird die zweite Ebene zur Gruppierung verwendet.
+config.label_hasOverlines: Sollen in den Menü-Gruppen Überschriften ausgegeben werden (Titel der zweiten Ebene)?
+config.label_columns: Anzahl der verfügbaren Spalten (auch innerhalb der Gruppe)
+config.label_column: Spalte
+config.label_isOverviewPage: Im 2.Level-Menü als 'Übersicht' ausgeben
+config.label_hideInSlm: Nicht im 'Second Level Menu' anzeigen

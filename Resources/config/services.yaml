@@ -16,12 +16,12 @@ services:
 
     prodigious_sonata_menu.manager:
         class: '%prodigious_sonata_menu.manager.class%'
-        arguments: ['%sonata_menu.entity.menu%', '@doctrine', '@prodigious_sonata_menuitem.manager']
+        arguments: ['%sonata_menu.entity.menu%', '@doctrine', '@prodigious_sonata_menuitem.manager', '@stof_doctrine_extensions.listener.translatable']
         public: true
 
     prodigious_sonata_menuitem.manager:
         class: '%prodigious_sonata_menuitem.manager.class%'
-        arguments: ['%sonata_menu.entity.menu_item%', '@doctrine', '@sonata.media.manager.media']
+        arguments: ['%sonata_menu.entity.menu_item%', '@doctrine', '@sonata.media.manager.media', '@stof_doctrine_extensions.listener.translatable']
         public: true
 
     prodigious_sonata_menu.menu_registry:

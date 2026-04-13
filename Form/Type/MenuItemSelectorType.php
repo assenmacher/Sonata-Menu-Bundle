@@ -76,8 +76,10 @@ class MenuItemSelectorType extends AbstractType
 
         foreach ($options['menu']->getMenuItems() as $menuItem)
         {
-            if(!empty($menuItem->getParent())) continue;
+            if(!empty($menuItem->getParent()) || empty($menuItem->getId())) continue;
             if($options['filter_choice']['id'] && $menuItem->getId() == $options['filter_choice']['id']) continue;
+
+            $menuItem->setLevel(0);
 
             $choices[$menuItem->getId()] = $menuItem;
 
@@ -96,7 +98,8 @@ class MenuItemSelectorType extends AbstractType
     private function childWalker(MenuItemInterface $menuItem, $options, &$choices, $level = 1)
     {
         foreach ($menuItem->getChildren() as $child) {
-            if($options['filter_choice']['id'] && $menuItem->getId() == $options['filter_choice']['id']) continue;
+            if(empty($child->getId())) continue;
+            if($options['filter_choice']['id'] && $child->getId() == $options['filter_choice']['id']) continue;
 
             $choices[$child->getId()] = $child->setLevel($level);
 

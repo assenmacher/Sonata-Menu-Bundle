@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Prodigious\Sonata\MenuBundle\Model\MenuInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
 use Prodigious\Sonata\MenuBundle\Model\PageInterface;
+use App\Sonata\PageBundle\Model\PageInterface as AppSonataPageInterface;
 use Sonata\MediaBundle\Model\MediaInterface;
 
 /**
@@ -143,7 +144,7 @@ abstract class MenuItem implements MenuItemInterface
     protected $localeEnabled;
 
     /**
-     * @var PageInterface|null
+     * @var AppSonataPageInterface|null
 
      * @ORM\ManyToOne(targetEntity="\Prodigious\Sonata\MenuBundle\Model\PageInterface")
      * @ORM\JoinColumn(name="page", referencedColumnName="id", onDelete="SET NULL", nullable=true)
@@ -246,6 +247,34 @@ abstract class MenuItem implements MenuItemInterface
     protected $hasGroups;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(name="icon_class", type="string", length=255, nullable=true)
+     */
+    protected $iconClass;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="block_alias", type="string", length=255, nullable=true)
+     */
+    protected $blockAlias;
+
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="is_overview_page", type="boolean", nullable=true, options={"default":false})
+     */
+    protected $isOverviewPage;
+
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="hide_in_slm", type="boolean", nullable=true, options={"default":false})
+     */
+    protected $hideInSlm;
+
+    /**
      * Class constructor
      *
      */
@@ -260,9 +289,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set name
      *
      * @param string $name
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -272,9 +302,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get name
      *
-     * @return string 
+     * @return null|string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -283,9 +313,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set title
      *
      * @param string $name
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setTitle($title)
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
@@ -295,9 +326,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get title
      *
-     * @return string
+     * @return null|string
      */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
@@ -307,9 +338,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set info text
      *
      * @param string|null $infoText
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setInfoText(?string $infoText)
+    public function setInfoText(string $infoText): self
     {
         $this->infoText = $infoText;
 
@@ -317,9 +349,9 @@ abstract class MenuItem implements MenuItemInterface
     }
 
     /**
-     * Get title
+     * Get info text
      *
-     * @return string|null
+     * @return null|string
      */
     public function getInfoText(): ?string
     {
@@ -327,12 +359,23 @@ abstract class MenuItem implements MenuItemInterface
     }
 
     /**
+     * Has info text
+     *
+     * @return bool
+     */
+    public function hasInfoText(): bool
+    {
+        return is_string($this->getInfoText()) && $this->getInfoText() !== '';
+    }
+
+    /**
      * Set url
      *
      * @param string $url
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setUrl($url)
+    public function setUrl(string $url): self
     {
         $this->url = $url;
 
@@ -342,9 +385,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get url
      *
-     * @return string 
+     * @return null|string
      */
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }
@@ -353,9 +396,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set attributeClass
      *
      * @param string $attributeClass
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setAttributeClass($attributeClass)
+    public function setAttributeClass(string $attributeClass): self
     {
         $this->attributeClass = $attributeClass;
 
@@ -365,9 +409,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get attributeClass
      *
-     * @return string
+     * @return null|string
      */
-    public function getAttributeClass()
+    public function getAttributeClass(): ?string
     {
         return $this->attributeClass;
     }
@@ -376,9 +420,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set attributeStyle
      *
      * @param string $attributeStyle
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setAttributeStyle($attributeStyle)
+    public function setAttributeStyle(string $attributeStyle): self
     {
         $this->attributeStyle = $attributeStyle;
 
@@ -388,9 +433,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get attributeStyle
      *
-     * @return string
+     * @return null|string
      */
-    public function getAttributeStyle()
+    public function getAttributeStyle(): ?string
     {
         return $this->attributeStyle;
     }
@@ -399,9 +444,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set attributeId
      *
      * @param string $attributeId
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setAttributeId($attributeId)
+    public function setAttributeId(string $attributeId): self
     {
         $this->attributeId = $attributeId;
 
@@ -411,9 +457,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get attributeId
      *
-     * @return string
+     * @return null|string
      */
-    public function getAttributeId()
+    public function getAttributeId(): ?string
     {
         return $this->attributeId;
     }
@@ -422,9 +468,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set linkAttributeClass
      *
      * @param string $linkAttributeClass
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setLinkAttributeClass($linkAttributeClass)
+    public function setLinkAttributeClass($linkAttributeClass): self
     {
         $this->linkAttributeClass = $linkAttributeClass;
 
@@ -434,9 +481,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get linkAttributeClass
      *
-     * @return string
+     * @return null|string
      */
-    public function getLinkAttributeClass()
+    public function getLinkAttributeClass(): ?string
     {
         return $this->linkAttributeClass;
     }
@@ -445,9 +492,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set linkAttributeStyle
      *
      * @param string $linkAttributeStyle
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setLinkAttributeStyle($linkAttributeStyle)
+    public function setLinkAttributeStyle(string $linkAttributeStyle): self
     {
         $this->linkAttributeStyle = $linkAttributeStyle;
 
@@ -457,9 +505,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get linkAttributeStyle
      *
-     * @return string
+     * @return null|string
      */
-    public function getLinkAttributeStyle()
+    public function getLinkAttributeStyle(): ?string
     {
         return $this->linkAttributeStyle;
     }
@@ -468,9 +516,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set linkAttributeId
      *
      * @param string $linkAttributeId
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setLinkAttributeId($linkAttributeId)
+    public function setLinkAttributeId(string $linkAttributeId): self
     {
         $this->linkAttributeId = $linkAttributeId;
 
@@ -480,9 +529,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get linkAttributeId
      *
-     * @return string
+     * @return null|string
      */
-    public function getLinkAttributeId()
+    public function getLinkAttributeId(): ?string
     {
         return $this->linkAttributeId;
     }
@@ -491,9 +540,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set labelAttributeClass
      *
      * @param string $labelAttributeClass
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setLabelAttributeClass($labelAttributeClass)
+    public function setLabelAttributeClass(string $labelAttributeClass): self
     {
         $this->labelAttributeClass = $labelAttributeClass;
 
@@ -503,9 +553,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get labelAttributeClass
      *
-     * @return string
+     * @return null|string
      */
-    public function getLabelAttributeClass()
+    public function getLabelAttributeClass(): ?string
     {
         return $this->labelAttributeClass;
     }
@@ -514,9 +564,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set labelAttributeStyle
      *
      * @param string $labelAttributeStyle
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setLabelAttributeStyle($labelAttributeStyle)
+    public function setLabelAttributeStyle(string $labelAttributeStyle): self
     {
         $this->labelAttributeStyle = $labelAttributeStyle;
 
@@ -526,9 +577,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get labelAttributeStyle
      *
-     * @return string
+     * @return null|string
      */
-    public function getLabelAttributeStyle()
+    public function getLabelAttributeStyle(): ?string
     {
         return $this->labelAttributeStyle;
     }
@@ -537,9 +588,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set labelAttributeId
      *
      * @param string $labelAttributeId
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setLabelAttributeId($labelAttributeId)
+    public function setLabelAttributeId(string $labelAttributeId): self
     {
         $this->labelAttributeId = $labelAttributeId;
 
@@ -549,9 +601,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get labelAttributeId
      *
-     * @return string
+     * @return null|string
      */
-    public function getLabelAttributeId()
+    public function getLabelAttributeId(): ?string
     {
         return $this->labelAttributeId;
     }
@@ -560,9 +612,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set position
      *
      * @param int $position
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setPosition($position)
+    public function setPosition(int $position): self
     {
         $this->position = $position;
 
@@ -574,7 +627,7 @@ abstract class MenuItem implements MenuItemInterface
      *
      * @return int 
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -582,10 +635,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set target
      *
-     * @param boolean $enabled
-     * @return MenuItem
+     * @param bool $target
+     *
+     * @return MenuItemInterface
      */
-    public function setTarget($target)
+    public function setTarget(bool $target): self
     {
         $this->target = $target;
 
@@ -595,9 +649,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get target
      *
-     * @return boolean 
+     * @return null|bool
      */
-    public function getTarget()
+    public function getTarget(): ?bool
     {
         return $this->target;
     }
@@ -605,12 +659,13 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set enabled
      *
-     * @param boolean $enabled
-     * @return MenuItem
+     * @param null|bool $enabled
+     *
+     * @return MenuItemInterface
      */
-    public function setEnabled($enabled)
+    public function setEnabled(?bool $enabled): self
     {
-        $this->enabled = $enabled;
+        $this->enabled = (bool) $enabled;
 
         return $this;
     }
@@ -618,9 +673,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get enabled
      *
-     * @return boolean
+     * @return bool
      */
-    public function getEnabled()
+    public function getEnabled(): ?bool
     {
         return $this->enabled;
     }
@@ -628,10 +683,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set locale enabled
      *
-     * @param boolean $enabled
-     * @return MenuItem
+     * @param bool $enabled
+     *
+     * @return MenuItemInterface
      */
-    public function setLocaleEnabled($localeEnabled)
+    public function setLocaleEnabled(?bool $localeEnabled): self
     {
         $this->localeEnabled = $localeEnabled;
 
@@ -643,7 +699,7 @@ abstract class MenuItem implements MenuItemInterface
      *
      * @return boolean
      */
-    public function getLocaleEnabled()
+    public function getLocaleEnabled(): ?bool
     {
         return $this->localeEnabled;
     }
@@ -651,9 +707,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get page
      *
-     * @return null|PageInterface
+     * @return null|AppSonataPageInterface
      */
-    public function getPage()
+    public function getPage(): ?AppSonataPageInterface
     {
         return $this->page;
     }
@@ -661,11 +717,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set page
      *
-     * @param null|PageInterface $page
+     * @param null|AppSonataPageInterface $page
      *
-     * @return MenuItem
+     * @return MenuItemInterface
      */
-    public function setPage($page)
+    public function setPage(?AppSonataPageInterface $page): self
     {
         $this->page = $page;
 
@@ -676,9 +732,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set page parameter
      *
      * @param string $pageParameter
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setPageParameter($pageParameter)
+    public function setPageParameter(string $pageParameter): self
     {
         $this->pageParameter = $pageParameter;
 
@@ -688,9 +745,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get page parameter
      *
-     * @return string
+     * @return null|string
      */
-    public function getPageParameter()
+    public function getPageParameter(): ?string
     {
         return $this->pageParameter;
     }
@@ -699,9 +756,10 @@ abstract class MenuItem implements MenuItemInterface
      * Set page anchor
      *
      * @param string $pageAnchor
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setPageAnchor($pageAnchor)
+    public function setPageAnchor(string $pageAnchor): self
     {
         $this->pageAnchor = $pageAnchor;
 
@@ -711,9 +769,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get page anchor
      *
-     * @return string
+     * @return null|string
      */
-    public function getPageAnchor()
+    public function getPageAnchor(): ?string
     {
         return $this->pageAnchor;
     }
@@ -723,7 +781,7 @@ abstract class MenuItem implements MenuItemInterface
      *
      * @return null|MenuItemInterface
      */
-    public function getParent()
+    public function getParent(): ?MenuItemInterface
     {
         return $this->parent;
     }
@@ -733,9 +791,9 @@ abstract class MenuItem implements MenuItemInterface
      *
      * @param null|MenuItemInterface $parent
      *
-     * @return null|MenuItemInterface
+     * @return MenuItemInterface
      */
-    public function setParent(?MenuItemInterface $parent)
+    public function setParent(?MenuItemInterface $parent): self
     {
         $this->parent = $parent;
         
@@ -750,9 +808,9 @@ abstract class MenuItem implements MenuItemInterface
      *
      * @param MenuItemInterface $child
      *
-     * @return $this
+     * @return MenuItemInterface
      */
-    public function addChild(MenuItemInterface $child)
+    public function addChild(MenuItemInterface $child): self
     {
         $this->children->add($child);
 
@@ -763,10 +821,14 @@ abstract class MenuItem implements MenuItemInterface
      * Remove child
      *
      * @param MenuItemInterface $child
+     *
+     * @return MenuItemInterface
      */
-    public function removeChild(MenuItemInterface $child)
+    public function removeChild(MenuItemInterface $child): self
     {
         $this->children->removeElement($child);
+
+        return $this;
     }
 
     /**
@@ -774,9 +836,9 @@ abstract class MenuItem implements MenuItemInterface
      *
      * @param ArrayCollection $children
      *
-     * @return MenuItem
+     * @return MenuItemInterface
      */
-    public function setChildren(ArrayCollection $children)
+    public function setChildren(ArrayCollection $children): self
     {
         $this->children = $children;
 
@@ -788,7 +850,7 @@ abstract class MenuItem implements MenuItemInterface
      *
      * @return array
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         return $this->children->toArray();
     }
@@ -796,11 +858,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set menu
      *
-     * @param MenuInterface $menu
+     * @param null|MenuInterface $menu
      *
-     * @return MenuItem
+     * @return MenuItemInterface
      */
-    public function setMenu(?MenuInterface $menu)
+    public function setMenu(?MenuInterface $menu): self
     {
         $this->menu = $menu;
 
@@ -810,25 +872,29 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get menu
      *
-     * @return MenuInterface
+     * @return null|MenuInterface
      */
-    public function getMenu()
+    public function getMenu(): ?MenuInterface
     {
         return $this->menu;
     }
 
     /**
      * Has child
+     *
+     * @return bool
      */
-    public function hasChild()
+    public function hasChild(): bool
     {
         return count($this->children) > 0;
     }
 
     /**
      * Has parent
+     *
+     * @return bool
      */
-    public function hasParent()
+    public function hasParent(): bool
     {
         return !is_null($this->parent);
     }
@@ -848,9 +914,9 @@ abstract class MenuItem implements MenuItemInterface
      *
      * @param int $level
 
-     * @return Page
+     * @return MenuItemInterface
      */
-    public function setLevel(int $level): MenuItem
+    public function setLevel(int $level): self
     {
         $this->level = $level;
 
@@ -862,15 +928,17 @@ abstract class MenuItem implements MenuItemInterface
      *
      * @param string $indentedWith
      *
-     * @return string levelIndentedName
+     * @return string
      */
     public function getLevelIndentedName(string $indentedWith = '--'): string
     {
-        return str_pad('', (strlen($indentedWith) * $this->getLevel()), $indentedWith) . ' ' . $this->getName();
+        $name = (string) $this->getName() !== '' ? $this->getName() : '[new]';
+
+        return str_pad('', (strlen($indentedWith) * $this->getLevel()), $indentedWith) . ' ' . $name;
     }
 
     /**
-     * @return int
+     * @return null|int
      */
     public function getImageId(): ?int
     {
@@ -879,10 +947,14 @@ abstract class MenuItem implements MenuItemInterface
 
     /**
      * @param int $imageId
+     *
+     * @return MenuItemInterface
      */
-    public function setImageId(?int $imageId): void
+    public function setImageId(?int $imageId): self
     {
         $this->imageId = $imageId;
+
+        return $this;
     }
 
     /**
@@ -894,11 +966,15 @@ abstract class MenuItem implements MenuItemInterface
     }
 
     /**
-     * @param MediaInterface $image
+     * @param null|MediaInterface $image
+     *
+     * @return MenuItemInterface
      */
-    public function setImage(?MediaInterface $image): void
+    public function setImage(?MediaInterface $image): self
     {
         $this->image = $image;
+
+        return $this;
     }
 
     /**
@@ -919,10 +995,14 @@ abstract class MenuItem implements MenuItemInterface
 
     /**
      * @param array|null $articleTags
+     *
+     * @return MenuItemInterface
      */
-    public function setArticleTags(?array $articleTags): void
+    public function setArticleTags(?array $articleTags): self
     {
         $this->articleTags = $articleTags;
+
+        return $this;
     }
 
     /**
@@ -947,10 +1027,10 @@ abstract class MenuItem implements MenuItemInterface
      * set article counter
      *
      * @param null|int $articleCounter
-
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setArticleCounter(?int $articleCounter) :MenuItem
+    public function setArticleCounter(?int $articleCounter) :self
     {
         $this->articleCounter = $articleCounter;
 
@@ -971,10 +1051,10 @@ abstract class MenuItem implements MenuItemInterface
      * set columns
      *
      * @param null|int $columns
-
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setColumns(?int $columns) :MenuItem
+    public function setColumns(?int $columns) :self
     {
         $this->columns = $columns;
 
@@ -995,10 +1075,10 @@ abstract class MenuItem implements MenuItemInterface
      * set column
      *
      * @param null|int $column
-
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setColumn(?int $column) :MenuItem
+    public function setColumn(?int $column) :self
     {
         $this->column = $column;
 
@@ -1008,12 +1088,13 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set hasOverlines
      *
-     * @param boolean $hasOverlines
-     * @return MenuItem
+     * @param null|boolean $hasOverlines
+     *
+     * @return MenuItemInterface
      */
-    public function setHasOverlines($hasOverlines)
+    public function setHasOverlines(?bool $hasOverlines) :self
     {
-        $this->hasOverlines = $hasOverlines;
+        $this->hasOverlines = (bool) $hasOverlines;
 
         return $this;
     }
@@ -1021,9 +1102,9 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get hasOverlines
      *
-     * @return boolean
+     * @return null|boolean
      */
-    public function getHasOverlines()
+    public function getHasOverlines(): ?bool
     {
         return $this->hasOverlines;
     }
@@ -1032,11 +1113,12 @@ abstract class MenuItem implements MenuItemInterface
      * Set hasGroups
      *
      * @param boolean $hasGroups
-     * @return MenuItem
+     *
+     * @return MenuItemInterface
      */
-    public function setHasGroups($hasGroups)
+    public function setHasGroups(?bool $hasGroups) :self
     {
-        $this->hasGroups = $hasGroups;
+        $this->hasGroups = (bool) $hasGroups;
 
         return $this;
     }
@@ -1044,14 +1126,130 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Get hasGroups
      *
-     * @return boolean
+     * @return null|boolean
      */
-    public function getHasGroups()
+    public function getHasGroups(): ?bool
     {
         return $this->hasGroups;
     }
 
-    public function __toString()
+    /**
+     * Set icon class
+     *
+     * @param null|string $iconClass
+     *
+     * @return MenuItemInterface
+     */
+    public function setIconClass(?string $iconClass): self
+    {
+        $this->iconClass = $iconClass;
+
+        return $this;
+    }
+
+    /**
+     * Get icon class
+     *
+     * @return null|string
+     */
+    public function getIconClass(): ?string
+    {
+        return $this->iconClass;
+    }
+
+    /**
+     * Has icon class
+     *
+     * @return bool
+     */
+    public function hasIconClass(): bool
+    {
+        return is_string($this->getIconClass()) && $this->getIconClass() !== '';
+    }
+
+    /**
+     * Set block alias
+     *
+     * @param null|string $blockAlias
+     *
+     * @return MenuItemInterface
+     */
+    public function setBlockAlias(?string $blockAlias): self
+    {
+        $this->blockAlias = $blockAlias;
+
+        return $this;
+    }
+
+    /**
+     * Get block alias
+     *
+     * @return null|string
+     */
+    public function getBlockAlias(): ?string
+    {
+        return $this->blockAlias;
+    }
+
+    /**
+     * Has block class
+     *
+     * @return bool
+     */
+    public function hasBlockAlias(): bool
+    {
+        return is_string($this->getBlockAlias()) && $this->getBlockAlias() !== '';
+    }
+
+    /**
+     * Set isOverviewPage
+     *
+     * @param null|boolean $isOverviewPage
+     *
+     * @return MenuItemInterface
+     */
+    public function setIsOverviewPage(?bool $isOverviewPage): self
+    {
+        $this->isOverviewPage = (bool) $isOverviewPage;
+
+        return $this;
+    }
+
+    /**
+     * Get isOverviewPage
+     *
+     * @return boolean
+     */
+    public function getIsOverviewPage(): ?bool
+    {
+        return $this->isOverviewPage;
+    }
+
+    /**
+     * Set hideInSlm (hide in second level menu)
+     *
+     * @param null|boolean $hideInSlm
+     *
+     * @return MenuItemInterface
+     */
+    public function setHideInSlm(?bool $hideInSlm): self
+    {
+        $this->hideInSlm = (bool) $hideInSlm;
+
+        return $this;
+    }
+
+    /**
+     * Get hideInSlm (hide in second level menu)
+     *
+     * @return null|boolean
+     */
+    public function getHideInSlm(): ?bool
+    {
+        return $this->hideInSlm;
+    }
+
+    public function __toString(): string
     {
         return isset($this->name) ? $this->name : "";
     }
