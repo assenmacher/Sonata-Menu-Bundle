@@ -341,7 +341,7 @@ abstract class MenuItem implements MenuItemInterface
      *
      * @return MenuItemInterface
      */
-    public function setInfoText(string $infoText): self
+    public function setInfoText(?string $infoText): self
     {
         $this->infoText = $infoText;
 
@@ -371,11 +371,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set url
      *
-     * @param string $url
+     * @param null|string $url
      *
      * @return MenuItemInterface
      */
-    public function setUrl(string $url): self
+    public function setUrl(?string $url): self
     {
         $this->url = $url;
 
@@ -395,11 +395,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set attributeClass
      *
-     * @param string $attributeClass
+     * @param null|string $attributeClass
      *
      * @return MenuItemInterface
      */
-    public function setAttributeClass(string $attributeClass): self
+    public function setAttributeClass(?string $attributeClass): self
     {
         $this->attributeClass = $attributeClass;
 
@@ -419,11 +419,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set attributeStyle
      *
-     * @param string $attributeStyle
+     * @param null|string $attributeStyle
      *
      * @return MenuItemInterface
      */
-    public function setAttributeStyle(string $attributeStyle): self
+    public function setAttributeStyle(?string $attributeStyle): self
     {
         $this->attributeStyle = $attributeStyle;
 
@@ -443,11 +443,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set attributeId
      *
-     * @param string $attributeId
+     * @param null|string $attributeId
      *
      * @return MenuItemInterface
      */
-    public function setAttributeId(string $attributeId): self
+    public function setAttributeId(?string $attributeId): self
     {
         $this->attributeId = $attributeId;
 
@@ -467,11 +467,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set linkAttributeClass
      *
-     * @param string $linkAttributeClass
+     * @param null|string $linkAttributeClass
      *
      * @return MenuItemInterface
      */
-    public function setLinkAttributeClass($linkAttributeClass): self
+    public function setLinkAttributeClass(?string $linkAttributeClass): self
     {
         $this->linkAttributeClass = $linkAttributeClass;
 
@@ -491,11 +491,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set linkAttributeStyle
      *
-     * @param string $linkAttributeStyle
+     * @param null|string $linkAttributeStyle
      *
      * @return MenuItemInterface
      */
-    public function setLinkAttributeStyle(string $linkAttributeStyle): self
+    public function setLinkAttributeStyle(?string $linkAttributeStyle): self
     {
         $this->linkAttributeStyle = $linkAttributeStyle;
 
@@ -515,11 +515,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set linkAttributeId
      *
-     * @param string $linkAttributeId
+     * @param null|string $linkAttributeId
      *
      * @return MenuItemInterface
      */
-    public function setLinkAttributeId(string $linkAttributeId): self
+    public function setLinkAttributeId(?string $linkAttributeId): self
     {
         $this->linkAttributeId = $linkAttributeId;
 
@@ -539,11 +539,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set labelAttributeClass
      *
-     * @param string $labelAttributeClass
+     * @param null|string $labelAttributeClass
      *
      * @return MenuItemInterface
      */
-    public function setLabelAttributeClass(string $labelAttributeClass): self
+    public function setLabelAttributeClass(?string $labelAttributeClass): self
     {
         $this->labelAttributeClass = $labelAttributeClass;
 
@@ -563,11 +563,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set labelAttributeStyle
      *
-     * @param string $labelAttributeStyle
+     * @param null|string $labelAttributeStyle
      *
      * @return MenuItemInterface
      */
-    public function setLabelAttributeStyle(string $labelAttributeStyle): self
+    public function setLabelAttributeStyle(?string $labelAttributeStyle): self
     {
         $this->labelAttributeStyle = $labelAttributeStyle;
 
@@ -587,11 +587,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set labelAttributeId
      *
-     * @param string $labelAttributeId
+     * @param null|string $labelAttributeId
      *
      * @return MenuItemInterface
      */
-    public function setLabelAttributeId(string $labelAttributeId): self
+    public function setLabelAttributeId(?string $labelAttributeId): self
     {
         $this->labelAttributeId = $labelAttributeId;
 
@@ -635,13 +635,13 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set target
      *
-     * @param bool $target
+     * @param null|bool $target
      *
      * @return MenuItemInterface
      */
-    public function setTarget(bool $target): self
+    public function setTarget(?bool $target): self
     {
-        $this->target = $target;
+        $this->target = (bool) $target;
 
         return $this;
     }
@@ -731,11 +731,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set page parameter
      *
-     * @param string $pageParameter
+     * @param null|string $pageParameter
      *
      * @return MenuItemInterface
      */
-    public function setPageParameter(string $pageParameter): self
+    public function setPageParameter(?string $pageParameter): self
     {
         $this->pageParameter = $pageParameter;
 
@@ -755,11 +755,11 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * Set page anchor
      *
-     * @param string $pageAnchor
+     * @param null|string $pageAnchor
      *
      * @return MenuItemInterface
      */
-    public function setPageAnchor(string $pageAnchor): self
+    public function setPageAnchor(?string $pageAnchor): self
     {
         $this->pageAnchor = $pageAnchor;
 

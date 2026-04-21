@@ -50,7 +50,7 @@ interface MenuItemInterface
      *
      * @return MenuItemInterface
      */
-    public function setInfoText(string $infoText): self;
+    public function setInfoText(?string $infoText): self;
 
     /**
      * Get info text
@@ -69,11 +69,11 @@ interface MenuItemInterface
     /**
      * Set url
      *
-     * @param string $url
+     * @param null|string $url
      *
      * @return MenuItemInterface
      */
-    public function setUrl(string $url): self;
+    public function setUrl(?string $url): self;
 
     /**
      * Get url
@@ -85,11 +85,11 @@ interface MenuItemInterface
     /**
      * Set attributeClass
      *
-     * @param string $attributeClass
+     * @param null|string $attributeClass
      *
      * @return MenuItemInterface
      */
-    public function setAttributeClass(string $attributeClass): self;
+    public function setAttributeClass(?string $attributeClass): self;
 
     /**
      * Get attributeClass
@@ -101,11 +101,11 @@ interface MenuItemInterface
     /**
      * Set attributeStyle
      *
-     * @param string $attributeStyle
+     * @param null|string $attributeStyle
      *
      * @return MenuItemInterface
      */
-    public function setAttributeStyle(string $attributeStyle): self;
+    public function setAttributeStyle(?string $attributeStyle): self;
 
     /**
      * Get attributeStyle
@@ -117,11 +117,11 @@ interface MenuItemInterface
     /**
      * Set attributeId
      *
-     * @param string $attributeId
+     * @param null|string $attributeId
      *
      * @return MenuItemInterface
      */
-    public function setAttributeId(string $attributeId): self;
+    public function setAttributeId(?string $attributeId): self;
 
     /**
      * Get attributeId
@@ -133,11 +133,11 @@ interface MenuItemInterface
     /**
      * Set linkAttributeClass
      *
-     * @param string $linkAttributeClass
+     * @param null|string $linkAttributeClass
      *
      * @return MenuItemInterface
      */
-    public function setLinkAttributeClass($linkAttributeClass): self;
+    public function setLinkAttributeClass(?string $linkAttributeClass): self;
 
     /**
      * Get linkAttributeClass
@@ -149,11 +149,11 @@ interface MenuItemInterface
     /**
      * Set linkAttributeStyle
      *
-     * @param string $linkAttributeStyle
+     * @param null|string $linkAttributeStyle
      *
      * @return MenuItemInterface
      */
-    public function setLinkAttributeStyle(string $linkAttributeStyle): self;
+    public function setLinkAttributeStyle(?string $linkAttributeStyle): self;
 
     /**
      * Get linkAttributeStyle
@@ -165,11 +165,11 @@ interface MenuItemInterface
     /**
      * Set linkAttributeId
      *
-     * @param string $linkAttributeId
+     * @param null|string $linkAttributeId
      *
      * @return MenuItemInterface
      */
-    public function setLinkAttributeId(string $linkAttributeId): self;
+    public function setLinkAttributeId(?string $linkAttributeId): self;
 
     /**
      * Get linkAttributeId
@@ -181,11 +181,11 @@ interface MenuItemInterface
     /**
      * Set labelAttributeClass
      *
-     * @param string $labelAttributeClass
+     * @param null|string $labelAttributeClass
      *
      * @return MenuItemInterface
      */
-    public function setLabelAttributeClass(string $labelAttributeClass): self;
+    public function setLabelAttributeClass(?string $labelAttributeClass): self;
 
     /**
      * Get labelAttributeClass
@@ -197,11 +197,11 @@ interface MenuItemInterface
     /**
      * Set labelAttributeStyle
      *
-     * @param string $labelAttributeStyle
+     * @param null|string $labelAttributeStyle
      *
      * @return MenuItemInterface
      */
-    public function setLabelAttributeStyle(string $labelAttributeStyle): self;
+    public function setLabelAttributeStyle(?string $labelAttributeStyle): self;
 
     /**
      * Get labelAttributeStyle
@@ -213,11 +213,11 @@ interface MenuItemInterface
     /**
      * Set labelAttributeId
      *
-     * @param string $labelAttributeId
+     * @param null|string $labelAttributeId
      *
      * @return MenuItemInterface
      */
-    public function setLabelAttributeId(string $labelAttributeId): self;
+    public function setLabelAttributeId(?string $labelAttributeId): self;
 
     /**
      * Get labelAttributeId
@@ -244,11 +244,11 @@ interface MenuItemInterface
     /**
      * Set target
      *
-     * @param bool $target
+     * @param null|bool $target
      *
      * @return MenuItemInterface
      */
-    public function setTarget(bool $target): self;
+    public function setTarget(?bool $target): self;
 
     /**
      * Get target
@@ -308,11 +308,11 @@ interface MenuItemInterface
     /**
      * Set page parameter
      *
-     * @param string $pageParameter
+     * @param null|string $pageParameter
      *
      * @return MenuItemInterface
      */
-    public function setPageParameter(string $pageParameter): self;
+    public function setPageParameter(?string $pageParameter): self;
 
     /**
      * Get page parameter
@@ -324,11 +324,11 @@ interface MenuItemInterface
     /**
      * Set page anchor
      *
-     * @param string $pageAnchor
+     * @param null|string $pageAnchor
      *
      * @return MenuItemInterface
      */
-    public function setPageAnchor(string $pageAnchor): self;
+    public function setPageAnchor(?string $pageAnchor): self;
 
     /**
      * Get page anchor
