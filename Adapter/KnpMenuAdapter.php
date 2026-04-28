@@ -207,25 +207,30 @@ class KnpMenuAdapter
                     $routeParameters['_fragment'] = $menuItem->getPageAnchor();
                 }
 
-                if (!$this->cmsManagerSelector->isPageViewable($page, $routeParameters)) return null;
+                try {
+                    $route = $this->cmsPageRouteProvider->getRouteByName($page, $routeParameters);
 
-                $route = $this->cmsPageRouteProvider->getRouteByName($page);
+                    $generateParameter = array_merge($routeParameters, [RouteObjectInterface::ROUTE_OBJECT => $route]);
 
-                $uri = $this->router->generate($route, $routeParameters);
+                    $uri = $this->router->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, $generateParameter);
 
-                $pathVariables = $route->compile()->getPathVariables();
+                    $pathVariables = $route->compile()->getPathVariables();
 
-                //remove none route specific parameters
-                $routeParameters = array_intersect_key($routeParameters, array_flip($pathVariables));
+                    //remove none route specific parameters
+                    $routeParameters = array_intersect_key($routeParameters, array_flip($pathVariables));
 
-                $routeParameters['path'] = $page->getUrl();
+                    $routeParameters['path'] = $page->getUrl();
 
-                $routes = [
-                    [
-                        'route' => AppSonataPageInterface::PAGE_ROUTE_CMS_NAME,
-                        'parameters' => $routeParameters,
-                    ]
-                ];
+                    $routes = [
+                        [
+                            'route' => AppSonataPageInterface::PAGE_ROUTE_CMS_NAME,
+                            'parameters' => $routeParameters,
+                        ]
+                    ];
+                } catch (\Exception $e) {
+                    return null;
+                }
+
             }
             else if($menuItem->getPageAnchor())
             {
