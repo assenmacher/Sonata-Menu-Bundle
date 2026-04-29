@@ -287,9 +287,26 @@ class KnpMenuAdapter
 
         $menuItemChilds = $this->menuItemManager->getActiveChildren($menuItem);
 
-        if (count($menuItemChilds)) {
-            foreach ($menuItemChilds as $menuItemChild) {
+        if (count($menuItemChilds))
+        {
+            foreach ($menuItemChilds as $menuItemChild)
+            {
                 $this->recursiveAddItem($childMenu, $menuItemChild, $options);
+            }
+        }
+
+        if($childMenu->count() === 0)
+        {
+            if(empty($childMenu->getUri()))
+            {
+                $menu->removeChild($childMenu);
+            }
+        }
+        else if($childMenu->count() === 1)
+        {
+            if(!$childMenu->getFirstChild()->count() && $childMenu->getUri() === $childMenu->getFirstChild()->getUri())
+            {
+                $childMenu->removeChild($childMenu->getFirstChild());
             }
         }
 
