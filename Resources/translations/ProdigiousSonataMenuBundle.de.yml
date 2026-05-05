@@ -80,3 +80,5 @@ config.label_columns: Anzahl der verfügbaren Spalten (auch innerhalb der Gruppe
 config.label_column: Spalte
 config.label_isOverviewPage: Im 2.Level-Menü als 'Übersicht' ausgeben
 config.label_hideInSlm: Nicht im 'Second Level Menu' anzeigen
+config.label_max_columns: Anzahl an Spalten (des Tempates überschreiben)
+config.label_select_optional: Nur auswählen wenn benötigt

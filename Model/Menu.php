@@ -71,6 +71,13 @@ abstract class Menu implements MenuInterface
     protected $isMegamenu;
 
     /**
+     * @var integer|null
+     *
+     * @ORM\Column(name="max_columns", type="smallint", options={"unsigned"=true}, nullable=true)
+     */
+    protected $maxColumns;
+
+    /**
      * Constructor
      *
      */
@@ -278,7 +285,31 @@ abstract class Menu implements MenuInterface
         return $this->isMegamenu;
     }
 
+    /**
+     * get maxColumns
+     *
+     * @param null|int $default
+     * *
+     * @return null|int
+     */
+    public function getMaxColumns(?int $default = null): ?int
+    {
+        return $this->maxColumns ?: $default;
+    }
 
+    /**
+     * set maxColumns
+     *
+     * @param null|int $maxColumns
+     *
+     * @return MenuItemInterface
+     */
+    public function setMaxColumns(?int $maxColumns) :self
+    {
+        $this->maxColumns = $maxColumns;
+
+        return $this;
+    }
 
     public function __toString(): string
     {
