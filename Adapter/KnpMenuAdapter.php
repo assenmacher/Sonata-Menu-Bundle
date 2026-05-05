@@ -142,6 +142,8 @@ class KnpMenuAdapter
         if($menu = $this->menuManager->loadByAliasAndSiteId($alias, $siteId, MenuManager::STATUS_ENABLED)) {
             $items = $this->menuManager->getRootItems($menu, MenuManager::STATUS_ENABLED);
 
+            $knp->setExtra('menu', $menu);
+
             foreach ($items as $item)
             {
                 $this->recursiveAddItem($knp, $item, $options);
