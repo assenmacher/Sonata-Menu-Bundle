@@ -228,6 +228,13 @@ abstract class MenuItem implements MenuItemInterface
     /**
      * @var integer|null
      *
+     * @ORM\Column(name="max_columns", type="smallint", options={"unsigned"=true}, nullable=true)
+     */
+    protected $maxColumns;
+
+    /**
+     * @var integer|null
+     *
      * @ORM\Column(name="spalte", type="smallint", options={"unsigned"=true}, nullable=true)
      */
     protected $column;
@@ -1057,6 +1064,32 @@ abstract class MenuItem implements MenuItemInterface
     public function setColumns(?int $columns) :self
     {
         $this->columns = $columns;
+
+        return $this;
+    }
+
+    /**
+     * get maxColumns
+     *
+     * @param null|int $default
+     * *
+     * @return null|int
+     */
+    public function getMaxColumns(?int $default = null): ?int
+    {
+        return $this->maxColumns ?: $default;
+    }
+
+    /**
+     * set maxColumns
+     *
+     * @param null|int $maxColumns
+     *
+     * @return MenuItemInterface
+     */
+    public function setMaxColumns(?int $maxColumns) :self
+    {
+        $this->maxColumns = $maxColumns;
 
         return $this;
     }

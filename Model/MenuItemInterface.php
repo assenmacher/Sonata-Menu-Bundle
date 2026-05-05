@@ -521,6 +521,24 @@ interface MenuItemInterface
     public function setColumns(?int $columns) :self;
 
     /**
+     * get maxColumns
+     *
+     * @param null|int $default
+     * *
+     * @return null|int
+     */
+    public function getMaxColumns(?int $default = null): ?int;
+
+    /**
+     * set maxColumns
+     *
+     * @param null|int $maxColumns
+     *
+     * @return MenuItemInterface
+     */
+    public function setMaxColumns(?int $maxColumns) :self;
+
+    /**
      * get column
      *
      * @return null|int

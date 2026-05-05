@@ -68,3 +68,5 @@ config.label_list_item_class: Breadcrumb elements CSS class (im <li>-Tag)
 config.field_group_options: Hompage
 config.label_image: Image
 config.label_article_tags: Article-Tag(s)
+config.label_max_columns: Anzahl an Spalten (des Tempates überschreiben)
+config.label_select_optional: Nur auswählen wenn benötigt

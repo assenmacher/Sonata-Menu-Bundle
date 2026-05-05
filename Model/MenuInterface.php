@@ -139,7 +139,23 @@ interface MenuInterface
      */
     public function getIsMegamenu(): ?bool;
 
+    /**
+     * get maxColumns
+     *
+     * @param null|int $default
+     * *
+     * @return null|int
+     */
+    public function getMaxColumns(?int $default = null): ?int;
 
+    /**
+     * set maxColumns
+     *
+     * @param null|int $maxColumns
+     *
+     * @return MenuItemInterface
+     */
+    public function setMaxColumns(?int $maxColumns) :self;
 
     public function __toString(): string;
 }

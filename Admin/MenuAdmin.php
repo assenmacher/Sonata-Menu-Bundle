@@ -12,6 +12,7 @@ use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class MenuAdmin extends AbstractAdmin
 {
@@ -33,6 +34,9 @@ class MenuAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+        /** @var MenuInterface $subject */
+        $subject = $this->getSubject();
+
         $formMapper
             ->with('config.label_menu', ['translation_domain' => 'ProdigiousSonataMenuBundle'])
                 ->add('name', TextType::class,
@@ -81,6 +85,34 @@ class MenuAdmin extends AbstractAdmin
             ->end()
         ->end();
 
+        if($subject->getId() && $subject->getIsMegamenu())
+        {
+            $formMapper
+                ->with('config.label_menu', ['translation_domain' => 'ProdigiousSonataMenuBundle'])
+                    ->add('maxColumns', ChoiceType::class,
+                        [
+                            'choices' => [
+                                '1' => 1,
+                                '2' => 2,
+                                '3' => 3,
+                                '4' => 4,
+                                '5' => 5,
+                                '6' => 6,
+                            ],
+                            'expanded' => false,
+                            'multiple' => false,
+                            'required' => false,
+                            'placeholder' => 'config.label_select_optional',
+                            'label' => 'config.label_max_columns',
+                        ],
+                        [
+                            'translation_domain' => 'ProdigiousSonataMenuBundle',
+                        ]
+                    )
+                ->end()
+            ->end();
+        }
+
         if($this->getConfigurationPool()->getContainer()->hasParameter('sonata.page.page.class'))
         {
             $formMapper
@@ -96,7 +128,8 @@ class MenuAdmin extends AbstractAdmin
                             'translation_domain' => 'ProdigiousSonataMenuBundle'
                         ]
                     )
-                ->end();
+                ->end()
+            ->end();
         }
     }
 

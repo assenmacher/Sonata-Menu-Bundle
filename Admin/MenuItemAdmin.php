@@ -248,15 +248,37 @@ class MenuItemAdmin extends AbstractAdmin
 
             if($subject->getLevel() === 0) {
                 $part
-                    ->add('articleTags', TagSelectorType::class, [ //classification bundle tags
-                        'label' => 'config.label_article_tags',
-                        'required' => false,
-                        'expanded' => false,
-                        'multiple' => true,
-                        'showEmptyNotiz' => false,
-                        'addGroupTitel' => true,
-                        'context' => 'global', //context created in classification bundle's crud
-                    ])
+                    ->add('maxColumns', ChoiceType::class,
+                        [
+                            'choices' => [
+                                '1' => 1,
+                                '2' => 2,
+                                '3' => 3,
+                                '4' => 4,
+                                '5' => 5,
+                                '6' => 6,
+                            ],
+                            'expanded' => false,
+                            'multiple' => false,
+                            'required' => false,
+                            'placeholder' => 'config.label_select_optional',
+                            'label' => 'config.label_max_columns',
+                        ],
+                        [
+                            'translation_domain' => 'ProdigiousSonataMenuBundle',
+                        ]
+                    )
+                    ->add('articleTags', TagSelectorType::class,
+                        [ //classification bundle tags
+                            'label' => 'config.label_article_tags',
+                            'required' => false,
+                            'expanded' => false,
+                            'multiple' => true,
+                            'showEmptyNotiz' => false,
+                            'addGroupTitel' => true,
+                            'context' => 'global', //context created in classification bundle's crud
+                        ]
+                    )
                     ->add('articleCounter', ChoiceType::class,
                         [
                             'choices' => [
