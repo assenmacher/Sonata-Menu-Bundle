@@ -19,9 +19,10 @@ use Sonata\MediaBundle\Admin\BaseMediaAdmin;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Prodigious\Sonata\MenuBundle\Manager\MenuItemManager;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use App\Sonata\ClassificationBundle\Form\Type\TagSelectorType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use App\Sonata\PageBundle\Form\Type\SiteUrlParameterValuesType;
 
 
 class MenuItemAdmin extends AbstractAdmin
@@ -221,6 +222,14 @@ class MenuItemAdmin extends AbstractAdmin
                     ],
                     [
                         'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                )
+                ->add('urlParametersSimpleFilter', SiteUrlParameterValuesType::class,
+                    [
+                        'subject'  => $subject,
+                        'required' => false,
+                        'label'    => false,
+                        'site'     => $subject->getMenu()->getSite(),
                     ]
                 )
             ->end()

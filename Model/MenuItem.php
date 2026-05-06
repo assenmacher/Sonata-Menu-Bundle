@@ -8,8 +8,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Prodigious\Sonata\MenuBundle\Model\MenuInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
 use Prodigious\Sonata\MenuBundle\Model\PageInterface;
-use App\Sonata\PageBundle\Model\PageInterface as AppSonataPageInterface;
 use Sonata\MediaBundle\Model\MediaInterface;
+use App\Sonata\PageBundle\Model\PageInterface as AppSonataPageInterface;
+use App\Sonata\PageBundle\Entity\Traits\UrlParametersTrait;
+use App\Sonata\PageBundle\Model\UrlParameterFilterInterface;
 
 /**
  * MenuItem
@@ -18,8 +20,10 @@ use Sonata\MediaBundle\Model\MediaInterface;
  * @ORM\MappedSuperclass
  * @ORM\InheritanceType("SINGLE_TABLE")
  */
-abstract class MenuItem implements MenuItemInterface
+abstract class MenuItem implements MenuItemInterface, UrlParameterFilterInterface
 {
+    use UrlParametersTrait;
+
     /**
      * @var string
      *

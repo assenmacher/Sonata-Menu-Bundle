@@ -14,6 +14,7 @@ services:
             - '@app.sonata_page.route.provider'
             - '@router'
             - '@request_stack'
+            - '@app.sonata_page.filter_parameter_service'
     prodigious_sonata_menu.twig.knp:
         class: '%prodigious_sonata_menu.twig.knp.class%'
         arguments:

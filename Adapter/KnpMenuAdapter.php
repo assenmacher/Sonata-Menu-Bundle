@@ -2,21 +2,21 @@
 
 namespace Prodigious\Sonata\MenuBundle\Adapter;
 
-use App\Sonata\PageBundle\Route\CmsPageRouteProvider;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Prodigious\Sonata\MenuBundle\Model\MenuItemInterface;
 use Prodigious\Sonata\MenuBundle\Manager\MenuManager;
 use Prodigious\Sonata\MenuBundle\Manager\MenuItemManager;
-
 use Sonata\PageBundle\Site\SiteSelectorInterface;
 use Sonata\PageBundle\CmsManager\CmsManagerSelectorInterface;
-use App\Sonata\PageBundle\Model\SiteInterface as AppSonataSiteInterface;
-use App\Sonata\PageBundle\Model\PageInterface as AppSonataPageInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Doctrine\ORM\Proxy\Proxy;
 use Symfony\Component\HttpFoundation\RequestStack;
+use App\Sonata\PageBundle\Route\CmsPageRouteProvider;
+use App\Sonata\PageBundle\Model\SiteInterface as AppSonataSiteInterface;
+use App\Sonata\PageBundle\Model\PageInterface as AppSonataPageInterface;
+use App\Sonata\PageBundle\Service\FilterParameterService;
 
 /**
  * Class KnpMenuAdapter
@@ -75,6 +75,11 @@ class KnpMenuAdapter
     protected $requestStack;
 
     /**
+     * @var FilterParameterService
+     */
+    protected $filterParameterService;
+
+    /**
      * KnpMenuAdapter constructor.
      *
      * @param FactoryInterface $factory
@@ -85,6 +90,7 @@ class KnpMenuAdapter
      * @param CmsPageRouteProvider $cmsPageRouteProvider
      * @param RouterInterface $router
      * @param RequestStack $requestStack
+     * @param FilterParameterService $filterParameterService
      */
     public function __construct(
         FactoryInterface $factory,
@@ -94,7 +100,8 @@ class KnpMenuAdapter
         CmsManagerSelectorInterface $cmsManagerSelector,
         CmsPageRouteProvider $cmsPageRouteProvider,
         RouterInterface $router,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        FilterParameterService $filterParameterService
     ) {
         $this->factory = $factory;
         $this->menuManager = $menuManager;
@@ -104,6 +111,7 @@ class KnpMenuAdapter
         $this->cmsPageRouteProvider = $cmsPageRouteProvider;
         $this->router = $router;
         $this->requestStack = $requestStack;
+        $this->filterParameterService = $filterParameterService;
     }
 
     /**
@@ -182,6 +190,8 @@ class KnpMenuAdapter
      */
     protected function recursiveAddItem(ItemInterface $menu, MenuItemInterface $menuItem, array $options = []): ?ItemInterface
     {
+        if(!$this->filterParameterService->isObjectViewable($menuItem)) return $menu;
+
         $routes = [];
         $uri    = '';
 
