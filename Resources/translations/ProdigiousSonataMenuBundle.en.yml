@@ -82,3 +82,5 @@ config.label_isOverviewPage: Im 2.Level-Menü als 'Übersicht' ausgeben
 config.label_hideInSlm: Nicht im 'Second Level Menu' anzeigen
 config.label_max_columns: Anzahl an Spalten (des Tempates überschreiben)
 config.label_select_optional: Nur auswählen wenn benötigt
+form.label_url_parameter_filter_for: Parameter based menu-item filter for '%parameter%'
+form.help_url_parameter_filter_global: Based on the URL parameter of the page that uses this menu-item. The filter <strong> only becomes active </strong> when <strong>at least one option</strong> has been selected.
