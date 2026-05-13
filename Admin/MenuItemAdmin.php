@@ -124,116 +124,134 @@ class MenuItemAdmin extends AbstractAdmin
         $this->rewriteObjects = true;
         $this->menuItemManager->loadObjects($subject);
 
-        $formMapper
-            ->with('config.label_menu_item',['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
-                ->add('name', TextType::class,
-                    [
-                        'label' => 'config.label_name',
-                    ],
-                    [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle',
-                    ]
-                )
-                ->add('title', TextType::class,
-                    [
-                        'label' => 'config.label_title',
-                        'attr' => ['style' => 'border:1px solid #ec6d36;'],
-                    ],
-                    [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle',
-                    ]
-                )
-                ->add('menu', ModelType::class,
-                    [
-                        'label' => 'config.label_menu',
-                        'required' => true,
-                        'btn_add' => false,
-                        'disabled' => true,
-                    ],
-                    [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle',
-                    ]
-                )
-                ->add('parent', MenuItemSelectorType::class,
-                    [
-                        'menu' => $subject->getMenu(),
-                        'model_manager' => $this->getModelManager(),
-                        'class' => $this->getClass(),
-                        'label' => 'config.label_parent',
-                        'required' => false,
-                        'btn_add' => false,
-                        'placeholder' => 'config.label_select',
-                        'property' => 'levelIndentedName',
-                        'filter_choice' => ['id' => $subject->getId()]
-                    ],
-                    [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle',
-                    ]
-                )
-                ->add('attributeClass', TextType::class,
-                    [
-                        'label' => 'config.label_attribute_class',
-                        'required' => false,
-                    ],
-                    [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle',
-                    ]
-                )
-                ->add('attributeStyle', TextType::class,
-                    [
-                        'label' => 'config.label_attribute_style',
-                        'required' => false,
-                    ],
-                    [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle',
-                    ]
-                )
-                ->add('attributeId', TextType::class,
-                    [
-                        'label' => 'config.label_attribute_id',
-                        'required' => false,
-                    ],
-                    [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle',
-                    ]
-                )
-                ->add('iconClass', TextType::class,
-                    [
-                        'label' => 'config.label_icon_class',
-                        'required' => false,
-                    ],
-                    [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle',
-                    ]
-                )
-                ->add('enabled', null,
-                    [
-                        'label' => 'config.label_enabled',
-                        'required' => false,
-                    ],
-                    [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle',
-                    ]
-                )
-                ->add('localeEnabled', null,
-                    [
-                        'label' => 'config.label_locale_enabled',
-                        'required' => false,
-                    ],
-                    [
-                        'translation_domain' => 'ProdigiousSonataMenuBundle',
-                    ]
-                )
-                ->add('urlParametersSimpleFilter', SiteUrlParameterValuesType::class,
-                    [
-                        'subject'  => $subject,
-                        'required' => false,
-                        'label'    => false,
-                        'site'     => $subject->getMenu()->getSite(),
-                    ]
-                )
-            ->end()
+        $mainPart = $formMapper->with('config.label_menu_item',['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle']);
+
+        $mainPart
+            ->add('name', TextType::class,
+                [
+                    'label' => 'config.label_name',
+                ],
+                [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ]
+            )
+            ->add('title', TextType::class,
+                [
+                    'label' => 'config.label_title',
+                    'attr' => ['style' => 'border:1px solid #ec6d36;'],
+                ],
+                [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ]
+            )
+            ->add('menu', ModelType::class,
+                [
+                    'label' => 'config.label_menu',
+                    'required' => true,
+                    'btn_add' => false,
+                    'disabled' => true,
+                ],
+                [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ]
+            )
+            ->add('parent', MenuItemSelectorType::class,
+                [
+                    'menu' => $subject->getMenu(),
+                    'model_manager' => $this->getModelManager(),
+                    'class' => $this->getClass(),
+                    'label' => 'config.label_parent',
+                    'required' => false,
+                    'btn_add' => false,
+                    'placeholder' => 'config.label_select',
+                    'property' => 'levelIndentedName',
+                    'filter_choice' => ['id' => $subject->getId()]
+                ],
+                [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ]
+            )
+            ->add('attributeClass', TextType::class,
+                [
+                    'label' => 'config.label_attribute_class',
+                    'required' => false,
+                ],
+                [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ]
+            )
+            ->add('attributeStyle', TextType::class,
+                [
+                    'label' => 'config.label_attribute_style',
+                    'required' => false,
+                ],
+                [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ]
+            )
+            ->add('attributeId', TextType::class,
+                [
+                    'label' => 'config.label_attribute_id',
+                    'required' => false,
+                ],
+                [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ]
+            )
+            ->add('iconClass', TextType::class,
+                [
+                    'label' => 'config.label_icon_class',
+                    'required' => false,
+                ],
+                [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ]
+            )
         ;
+        if(!$menu->getIsMegamenu())
+        {
+
+            $mainPart
+                ->add('blockAlias', TextType::class,
+                    [
+                        'required' => false,
+                    ],
+                    [
+                        'translation_domain' => 'ProdigiousSonataMenuBundle',
+                    ]
+                );
+        }
+
+        $mainPart
+            ->add('enabled', null,
+                [
+                    'label' => 'config.label_enabled',
+                    'required' => false,
+                ],
+                [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ]
+            )
+            ->add('localeEnabled', null,
+                [
+                    'label' => 'config.label_locale_enabled',
+                    'required' => false,
+                ],
+                [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ]
+            )
+            ->add('urlParametersSimpleFilter', SiteUrlParameterValuesType::class,
+                [
+                    'subject'  => $subject,
+                    'required' => false,
+                    'label'    => false,
+                    'site'     => $subject->getMenu()->getSite(),
+                ]
+            )
+        ;
+
+        $mainPart->end();
 
         if($subject->getId() && $menu->getIsMegamenu())
         {
