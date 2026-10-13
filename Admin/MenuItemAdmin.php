@@ -253,6 +253,28 @@ class MenuItemAdmin extends AbstractAdmin
 
         $mainPart->end();
 
+        $formMapper->with('config.label_menu_wcag', ['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
+            ->add('ariaLabel', TextType::class,
+                [
+                    'required' => false,
+                    'attr' => ['style' => 'border:1px solid #ec6d36;'],
+                ],
+                [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ]
+            )
+            ->add('ariaControls', TextType::class,
+                [
+                    'required' => false,
+                ],
+                [
+                    'translation_domain' => 'ProdigiousSonataMenuBundle',
+                ]
+            )
+        ->end();
+
+
+
         if($subject->getId() && $menu->getIsMegamenu())
         {
             $part = $formMapper->with('config.label_menu_meganenu', ['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle']);
