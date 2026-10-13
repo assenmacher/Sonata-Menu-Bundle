@@ -664,5 +664,51 @@ interface MenuItemInterface
      */
     public function getHideInSlm(): ?bool;
 
+    /**
+     * Set aria-label
+     *
+     * @param null|string $ariaLabel
+     *
+     * @return MenuItemInterface
+     */
+    public function setAriaLabel(?string $ariaLabel): self;
+
+    /**
+     * Get aria-label
+     *
+     * @return null|string
+     */
+    public function getAriaLabel(): ?string;
+
+    /**
+     * Has aria-label
+     *
+     * @return bool
+     */
+    public function hasAriaLabel(): bool;
+
+    /**
+     * Set aria-controls
+     *
+     * @param null|string $ariaControls
+     *
+     * @return MenuItemInterface
+     */
+    public function setAriaControls(?string $ariaControls): self;
+
+    /**
+     * Get aria-controls
+     *
+     * @return null|string
+     */
+    public function getAriaControls(): ?string;
+
+    /**
+     * Has aria-controls
+     *
+     * @return bool
+     */
+    public function hasAriaControls(): bool;
+
     public function __toString(): string;
 }

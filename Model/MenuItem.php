@@ -286,6 +286,21 @@ abstract class MenuItem implements MenuItemInterface, UrlParameterFilterInterfac
     protected $hideInSlm;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="aria_label", type="string", length=255, nullable=true)
+     * @Gedmo\Translatable
+     */
+    protected $ariaLabel;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="aria_controls", type="string", length=255, nullable=true)
+     */
+    protected $ariaControls;
+
+    /**
      * Class constructor
      *
      */
@@ -1284,6 +1299,74 @@ abstract class MenuItem implements MenuItemInterface, UrlParameterFilterInterfac
     public function getHideInSlm(): ?bool
     {
         return $this->hideInSlm;
+    }
+
+    /**
+     * Set aria-label
+     *
+     * @param null|string $ariaLabel
+     *
+     * @return MenuItemInterface
+     */
+    public function setAriaLabel(?string $ariaLabel): self
+    {
+        $this->ariaLabel = $ariaLabel;
+
+        return $this;
+    }
+
+    /**
+     * Get aria-label
+     *
+     * @return null|string
+     */
+    public function getAriaLabel(): ?string
+    {
+        return $this->ariaLabel;
+    }
+
+    /**
+     * Has aria-label
+     *
+     * @return bool
+     */
+    public function hasAriaLabel(): bool
+    {
+        return is_string($this->getAriaLabel()) && $this->getAriaLabel() !== '';
+    }
+
+    /**
+     * Set aria-controls
+     *
+     * @param null|string $ariaControls
+     *
+     * @return MenuItemInterface
+     */
+    public function setAriaControls(?string $ariaControls): self
+    {
+        $this->ariaControls = $ariaControls;
+
+        return $this;
+    }
+
+    /**
+     * Get aria-controls
+     *
+     * @return null|string
+     */
+    public function getAriaControls(): ?string
+    {
+        return $this->ariaControls;
+    }
+
+    /**
+     * Has aria-controls
+     *
+     * @return bool
+     */
+    public function hasAriaControls(): bool
+    {
+        return is_string($this->getAriaControls()) && $this->getAriaControls() !== '';
     }
 
     public function __toString(): string
