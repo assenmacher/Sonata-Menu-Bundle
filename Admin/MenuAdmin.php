@@ -122,7 +122,7 @@ class MenuAdmin extends AbstractAdmin
                             'label' => 'config.label_site',
                             'required' => true,
                             'btn_add' => false,
-                            'help' => 'If you change the site, all existing connections between menuitems and pages will be lost!'
+                            'sonata_help' => $this->getTranslator()->trans('config.help_site', [], $this->getTranslationDomain()),
                         ],
                         [
                             'translation_domain' => 'ProdigiousSonataMenuBundle'
@@ -164,8 +164,8 @@ class MenuAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('name')
-            ->add('alias')
+            ->add('name', null, ['label' => 'config.label_name', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
+            ->add('alias', null, ['label' => 'config.label_alias', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
         ;
     }
 
