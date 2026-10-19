@@ -214,6 +214,7 @@ class MenuItemAdmin extends AbstractAdmin
             $mainPart
                 ->add('blockAlias', TextType::class,
                     [
+                        'label' => 'config.label_block_alias',
                         'required' => false,
                     ],
                     [
@@ -256,6 +257,8 @@ class MenuItemAdmin extends AbstractAdmin
         $formMapper->with('config.label_menu_wcag', ['class' => 'col-md-6', 'translation_domain' => 'ProdigiousSonataMenuBundle'])
             ->add('ariaLabel', TextType::class,
                 [
+                    'label' => 'config.label_aria_label',
+                    'sonata_help' => $this->getTranslator()->trans('config.help_aria_label', [], $this->getTranslationDomain()),
                     'required' => false,
                     'attr' => ['style' => 'border:1px solid #ec6d36;'],
                 ],
@@ -265,6 +268,8 @@ class MenuItemAdmin extends AbstractAdmin
             )
             ->add('ariaControls', TextType::class,
                 [
+                    'label' => 'config.label_aria_controls',
+                    'sonata_help' => $this->getTranslator()->trans('config.help_aria_controls', [], $this->getTranslationDomain()),
                     'required' => false,
                 ],
                 [
@@ -403,6 +408,7 @@ class MenuItemAdmin extends AbstractAdmin
                 $part
                     ->add('infoText', TextareaType::class,
                         [
+                            'label' => 'config.label_info_text',
                             'required' => false,
                             'attr'    => ["style" => "border:1px solid #ec6d36;"],
                         ],
@@ -442,6 +448,7 @@ class MenuItemAdmin extends AbstractAdmin
                     )
                     ->add('blockAlias', TextType::class,
                         [
+                            'label' => 'config.label_block_alias',
                             'required' => false,
                         ],
                         [
@@ -510,7 +517,7 @@ class MenuItemAdmin extends AbstractAdmin
                         'label' => 'config.label_page_parameter',
                         'required' => false,
                         'attr' => ['style' => 'border:1px solid #ec6d36;'],
-                        'help' => 'Only the parameter string, no leading \'?\'.',
+                        'sonata_help' => $this->getTranslator()->trans('config.help_page_parameter', [], $this->getTranslationDomain()),
                     ],
                     [
                         'translation_domain' => 'ProdigiousSonataMenuBundle'
@@ -521,7 +528,7 @@ class MenuItemAdmin extends AbstractAdmin
                         'label' => 'config.label_page_anchor',
                         'required' => false,
                         'attr' => ['style' => 'border:1px solid #ec6d36;'],
-                        'help' => 'Only the anchor string, no leading \'#\'.',
+                        'sonata_help' => $this->getTranslator()->trans('config.help_page_anchor', [], $this->getTranslationDomain()),
                     ],
                     [
                         'translation_domain' => 'ProdigiousSonataMenuBundle'
@@ -536,7 +543,7 @@ class MenuItemAdmin extends AbstractAdmin
                     'label' => 'config.label_custom_url',
                     'required' => false,
                     'attr' => ['style' => 'border:1px solid #ec6d36;'],
-                    'help' => 'Including protocol like http:// and parameters',
+                    'sonata_help' => $this->getTranslator()->trans('config.help_custom_url', [], $this->getTranslationDomain()),
                 ],
                 [
                     'translation_domain' => 'ProdigiousSonataMenuBundle'

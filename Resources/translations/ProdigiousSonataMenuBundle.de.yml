@@ -10,8 +10,15 @@ config.label_modify: Bearbeiten
 config.label_delete: Löschen
 config.label_menu_items: Menü Elemente
 config.label_menu_item: Menü Element
+config.label_menu_wcag: Barrierefreiheit (WCAG)
+config.label_aria_label: ARIA-Beschriftung (aria-label)
+config.help_aria_label: Wird kein Label angegeben, wird der Titel verwendet.
+config.label_aria_controls: Gesteuerte Elemente (aria-controls)
+config.help_aria_controls: Wenn keine direkte Verlinkung erzeugt wird, kann im Template oder hier die ID des Overlays hinterlegt werden.
+config.label_info_text: Infotext
 config.label_url: Zu verwendendes Menü
 config.label_custom_url: Custom URL
+config.help_custom_url: Inklusive Protokoll wie https:// und Parametern.
 config.label_attribute_class: Element Class (<li>-Tag)
 config.label_attribute_style: Element Style (<li>-Tag)
 config.label_attribute_id: Element Id (<li>-Tag)
@@ -27,6 +34,7 @@ config.label_target: New tab
 config.label_enabled: Aktiviert
 config.label_locale_enabled: In dieser Sprache aktiviert
 config.label_site: Site
+config.help_site: Wenn Sie die Website ändern, gehen alle bestehenden Verknüpfungen zwischen Menüpunkten und Seiten verloren!
 config.label_page: Page
 config.label_parent: Parent
 config.label_children: Submenu
@@ -40,10 +48,13 @@ config.label_saved: Gespeichert
 config.label_error: There is an error
 config.label_id: ID
 config.label_alias: Alias
+config.label_block_alias: Block-Alias
 config.label_title: Titel
 config.label_menu_list: Menüliste
 config.label_page_parameter: Page Parameter
+config.help_page_parameter: "Nur die Parameter, ohne vorangestelltes '?'."
 config.label_page_anchor: Page Anker
+config.help_page_anchor: "Nur der Anker, ohne vorangestelltes '#'."
 config.label_cache_policy: Cache policy
 config.label_safe_labels: HTML im Titel erlauben
 config.label_block_template: Block Template

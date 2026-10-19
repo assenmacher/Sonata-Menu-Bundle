@@ -10,8 +10,15 @@ config.label_modify: Edit
 config.label_delete: Delete
 config.label_menu_items: Menu Items
 config.label_menu_item: Menu Item
+config.label_menu_wcag: Accessibility (WCAG)
+config.label_aria_label: ARIA label (aria-label)
+config.help_aria_label: If no label is provided, the title is used.
+config.label_aria_controls: Controlled elements (aria-controls)
+config.help_aria_controls: If no direct link is generated, the overlay ID can be specified in the template or here.
+config.label_info_text: Information text
 config.label_url: URL
 config.label_custom_url: Custom URL
+config.help_custom_url: Including protocol such as https:// and parameters.
 config.label_attribute_class: Element Class (<li>-Tag)
 config.label_attribute_style: Element Style (<li>-Tag)
 config.label_attribute_id: Element Id (<li>-Tag)
@@ -27,6 +34,7 @@ config.label_target: New tab
 config.label_enabled: Enabled
 config.label_locale_enabled: Locale enabled
 config.label_site: Site
+config.help_site: If you change the site, all existing connections between menu items and pages will be lost!
 config.label_page: Page
 config.label_parent: Parent
 config.label_children: Submenu
@@ -40,10 +48,13 @@ config.label_saved: Saved
 config.label_error: There is an error
 config.label_id: ID
 config.label_alias: Alias
+config.label_block_alias: Block alias
 config.label_title: Title
 config.label_menu_list: Menu list
 config.label_page_parameter: Page parameter
+config.help_page_parameter: "Only the parameter string, no leading '?'."
 config.label_page_anchor: Page anchor
+config.help_page_anchor: "Only the anchor string, no leading '#'."
 config.label_cache_policy: Cache policy
 config.label_safe_labels: Safe labels
 config.label_block_template: Block Template
@@ -80,7 +91,7 @@ config.label_columns: Anzahl der verfügbaren Spalten (innerhalb der Gruppe)
 config.label_column: Spalte
 config.label_isOverviewPage: Im 2.Level-Menü als 'Übersicht' ausgeben
 config.label_hideInSlm: Nicht im 'Second Level Menu' anzeigen
-config.label_max_columns: Anzahl an Spalten (des Tempates überschreiben)
-config.label_select_optional: Nur auswählen wenn benötigt
+config.label_max_columns: Number of columns (override the template setting)
+config.label_select_optional: Select only if needed
 form.label_url_parameter_filter_for: Parameter based menu-item filter for '%parameter%'
 form.help_url_parameter_filter_global: Based on the URL parameter of the page that uses this menu-item. The filter <strong> only becomes active </strong> when <strong>at least one option</strong> has been selected.

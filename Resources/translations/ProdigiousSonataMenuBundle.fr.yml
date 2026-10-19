@@ -10,8 +10,15 @@ config.label_modify: Modifier
 config.label_delete: Supprimer
 config.label_menu_items: Menu Items
 config.label_menu_item: Menu Item
+config.label_menu_wcag: Accessibilité (WCAG)
+config.label_aria_label: Libellé ARIA (aria-label)
+config.help_aria_label: Si aucun libellé n'est indiqué, le titre est utilisé.
+config.label_aria_controls: Éléments contrôlés (aria-controls)
+config.help_aria_controls: Si aucun lien direct n'est généré, l'identifiant de la fenêtre superposée peut être renseigné dans le modèle ou ici.
+config.label_info_text: Texte d'information
 config.label_url: URL
 config.label_custom_url: Custom URL
+config.help_custom_url: Avec le protocole, par exemple https://, et les paramètres.
 config.label_attribute_class: Element Class (<li>-Tag)
 config.label_attribute_style: Element Style (<li>-Tag)
 config.label_attribute_id: Element Id (<li>-Tag)
@@ -27,6 +34,7 @@ config.label_target: Nouvel onglet
 config.label_enabled: Activé
 config.label_locale_enabled: Langue activé
 config.label_site: Site
+config.help_site: Si vous changez de site, tous les liens existants entre les éléments de menu et les pages seront perdus !
 config.label_page: Page
 config.label_parent: Parent
 config.label_children: Sous menu
@@ -40,10 +48,13 @@ config.label_saved: Bien enregistré
 config.label_error: Il y a une erreur
 config.label_id: ID
 config.label_alias: Alias
+config.label_block_alias: Alias du bloc
 config.label_title: Titre
 config.label_menu_list: Menu list
 config.label_page_parameter: Page parameter
+config.help_page_parameter: "Uniquement les paramètres, sans '?' au début."
 config.label_page_anchor: Page anchor
+config.help_page_anchor: "Uniquement l'ancre, sans '#' au début."
 config.label_cache_policy: Cache policy
 config.label_safe_labels: Safe labels
 config.label_block_template: Block Template
@@ -66,7 +77,21 @@ config.label_title_class: Titel CSS class
 config.label_list_class: Breadcrumb CSS class (im <ul>/<ol>-Tag)
 config.label_list_item_class: Breadcrumb elements CSS class (im <li>-Tag)
 config.field_group_options: Hompage
+config.label_isMegamenu: Utiliser un mégamenu
 config.label_image: Image
 config.label_article_tags: Article-Tag(s)
-config.label_max_columns: Anzahl an Spalten (des Tempates überschreiben)
-config.label_select_optional: Nur auswählen wenn benötigt
+config.label_article_counter: Nombre maximal d'aperçus d'articles. L'espace nécessaire est réservé.
+config.label_load_objects: Charger les images de tous les éléments de menu.
+config.help_load_objects: Si des images sont associées aux éléments de menu, elles sont chargées directement (hasImage() / getImage()). Sinon, seuls les identifiants des images sont chargés, ce qui améliore les performances (getImageId()).
+config.label_icon_class: Classe CSS de l'icône
+config.label_menu_meganenu: Configuration du mégamenu (si le template, le JavaScript et le CSS le permettent)
+config.label_hasGroups: Regrouper les éléments de menu ? Si oui, le deuxième niveau sert à définir les groupes.
+config.label_hasOverlines: Afficher les titres des groupes de menu (titres du deuxième niveau) ?
+config.label_columns: Nombre de colonnes disponibles (également au sein du groupe)
+config.label_column: Colonne
+config.label_isOverviewPage: Afficher comme page de présentation dans le menu de deuxième niveau
+config.label_hideInSlm: Masquer dans le menu de deuxième niveau
+config.label_max_columns: Nombre de colonnes (remplace le réglage du modèle)
+config.label_select_optional: Sélectionner uniquement si nécessaire
+form.label_url_parameter_filter_for: Filtre des éléments de menu basé sur le paramètre '%parameter%'
+form.help_url_parameter_filter_global: Basé sur le paramètre d'URL de la page qui utilise cet élément de menu. Le filtre <strong>ne devient actif</strong> que lorsqu'<strong>au moins une option</strong> a été sélectionnée.
